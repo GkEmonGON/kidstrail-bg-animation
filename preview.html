@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KidsTrail — BG Preview</title>
+<style>
+  :root { --bg:#fbebcf; --ink:#3a2510; --accent:#f5a425; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:-apple-system,system-ui,sans-serif; padding:16px; }
+  .wrap { max-width:1400px; margin:0 auto; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  h1 { margin:0; font-size:18px; }
+  .pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .pill { background:#fff; border:1px solid rgba(0,0,0,.08); padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; }
+  .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .stage { background:#fff; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,0.08); overflow:hidden; position:relative; }
+  .stage[data-mode="tablet-l"]  { aspect-ratio:16/10; }
+  .stage[data-mode="ipad-l"]    { aspect-ratio:4/3; }
+  .stage[data-mode="phone-l"]   { aspect-ratio:19.5/9; }
+  .stage[data-mode="phone-p"]   { aspect-ratio:9/19.5; max-width:380px; margin:0 auto; }
+  .stage[data-mode="native"]    { aspect-ratio:3/2; }
+  #anim { width:100%; height:100%; display:block; }
+  .ctl { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px; }
+  button.ghost { background:#fff; color:var(--ink); border:1px solid rgba(0,0,0,.1); }
+  .err { background:#fff3f3; color:#992222; border:1px solid #f0c; padding:14px 16px; border-radius:12px; margin-top:12px; font-size:14px; }
+  .err code { background:rgba(0,0,0,.06); padding:2px 6px; border-radius:6px; }
+  .meta { text-align:center; font-size:12px; opacity:.6; margin-top:8px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>KidsTrail BG · live preview</h1>
+      <div class="pills" id="modes">
+        <button class="pill active" data-mode="native">Native 3:2</button>
+        <button class="pill" data-mode="tablet-l">Tablet L 16:10</button>
+        <button class="pill" data-mode="ipad-l">iPad L 4:3</button>
+        <button class="pill" data-mode="phone-l">Phone L 19.5:9</button>
+        <button class="pill" data-mode="phone-p">Phone P 9:19.5</button>
+      </div>
+    </header>
+    <div class="stage" id="stage" data-mode="native"><div id="anim"></div></div>
+    <div class="meta" id="meta">loading…</div>
+    <div class="ctl">
+      <button onclick="A.play()">Play</button>
+      <button onclick="A.pause()">Pause</button>
+      <button onclick="A.goToAndStop(0,true)">Reset</button>
+      <button class="ghost" onclick="location.reload()">Reload JSON</button>
+    </div>
+    <div id="errbox"></div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+  const ANIM_PATH = "lottie-bg/bg.json";
+  let A;
+  function load() {
+    A = lottie.loadAnimation({
+      container: document.getElementById("anim"),
+      renderer: "canvas",
+      loop: true,
+      autoplay: true,
+      path: ANIM_PATH + "?t=" + Date.now(),
+      rendererSettings: { preserveAspectRatio: "xMidYMid slice", clearCanvas: true, dpr: window.devicePixelRatio || 2 },
+    });
+    A.addEventListener("DOMLoaded", () => {
+      document.getElementById("meta").textContent =
+        `loaded ${ANIM_PATH} · ${A.totalFrames} frames @ ${A.frameRate}fps · ${(A.totalFrames/A.frameRate).toFixed(2)}s`;
+    });
+    A.addEventListener("data_failed", () => {
+      document.getElementById("errbox").innerHTML =
+        `<div class="err">Couldn't load <code>${ANIM_PATH}</code>. ` +
+        `Export Lottie JSON from Creator → save as <code>${ANIM_PATH}</code>, then click Reload JSON.</div>`;
+    });
+  }
+  document.querySelectorAll(".pill").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      document.getElementById("stage").dataset.mode = b.dataset.mode;
+    };
+  });
+  load();
+</script>
+</body>
+</html>
