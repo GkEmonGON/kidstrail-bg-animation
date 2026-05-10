@@ -11,15 +11,17 @@
   .wrap { max-width:1400px; margin:0 auto; }
   header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
   h1 { margin:0; font-size:18px; }
-  .pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .pills, .variant { display:flex; gap:8px; flex-wrap:wrap; }
   .pill { background:#fff; border:1px solid rgba(0,0,0,.08); padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; }
   .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .stage-wrap { display:flex; justify-content:center; }
   .stage { background:#fff; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,0.08); overflow:hidden; position:relative; }
-  .stage[data-mode="tablet-l"]  { aspect-ratio:16/10; }
-  .stage[data-mode="ipad-l"]    { aspect-ratio:4/3; }
-  .stage[data-mode="phone-l"]   { aspect-ratio:19.5/9; }
-  .stage[data-mode="phone-p"]   { aspect-ratio:9/19.5; max-width:380px; margin:0 auto; }
-  .stage[data-mode="native"]    { aspect-ratio:3/2; }
+  .stage[data-mode="phone-p"]   { width:380px; aspect-ratio:9/19.5; }
+  .stage[data-mode="phone-l"]   { width:100%; aspect-ratio:19.5/9; }
+  .stage[data-mode="ipad-p"]    { width:600px; aspect-ratio:3/4; }
+  .stage[data-mode="ipad-l"]    { width:100%; aspect-ratio:4/3; }
+  .stage[data-mode="native-p"]  { width:480px; aspect-ratio:9/16; }
+  .stage[data-mode="native-l"]  { width:100%; aspect-ratio:3/2; }
   .layer { position:absolute; inset:0; }
   .layer canvas, .layer svg { width:100% !important; height:100% !important; }
   .animal { position:absolute; left:50%; top:62%; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
@@ -29,36 +31,51 @@
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px; }
   button.ghost { background:#fff; color:var(--ink); border:1px solid rgba(0,0,0,.1); }
   .err { background:#fff3f3; color:#992222; border:1px solid #f0c; padding:14px 16px; border-radius:12px; margin-top:12px; font-size:14px; }
-  .err code { background:rgba(0,0,0,.06); padding:2px 6px; border-radius:6px; }
   .meta { text-align:center; font-size:12px; opacity:.6; margin-top:8px; }
-  .toggle-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .toggle-row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
   label { font-size:13px; }
+  .label { font-size:12px; opacity:.7; margin-right:6px; align-self:center; }
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>KidsTrail BG · live preview (back + animal + front)</h1>
-      <div class="pills" id="modes">
-        <button class="pill active" data-mode="native">Native 3:2</button>
-        <button class="pill" data-mode="tablet-l">Tablet L 16:10</button>
-        <button class="pill" data-mode="ipad-l">iPad L 4:3</button>
-        <button class="pill" data-mode="phone-l">Phone L 19.5:9</button>
-        <button class="pill" data-mode="phone-p">Phone P 9:19.5</button>
+      <h1>KidsTrail BG · live preview</h1>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <div class="variant" id="variants">
+          <span class="label">Variant:</span>
+          <button class="pill active" data-variant="portrait">Portrait 9:16</button>
+          <button class="pill" data-variant="landscape">Landscape 3:2</button>
+        </div>
       </div>
     </header>
-    <div class="toggle-row" style="margin-bottom:10px;">
-      <label><input type="checkbox" id="tBack" checked /> back layer (sky/hills/trees/vines)</label>
-      <label><input type="checkbox" id="tAnimal" checked /> animal placeholder</label>
-      <label><input type="checkbox" id="tFront" checked /> front layer (grass/leaves/flowers/particles)</label>
+
+    <div class="pills" id="modes" style="margin-bottom:10px;">
+      <span class="label">Aspect:</span>
+      <button class="pill active" data-mode="native-p">Native</button>
+      <button class="pill" data-mode="phone-p">Phone P 9:19.5</button>
+      <button class="pill" data-mode="ipad-p">iPad P 3:4</button>
+      <button class="pill" data-mode="phone-l">Phone L 19.5:9</button>
+      <button class="pill" data-mode="ipad-l">iPad L 4:3</button>
+      <button class="pill" data-mode="native-l">Native L</button>
     </div>
-    <div class="stage" id="stage" data-mode="native">
-      <div class="layer" id="back"></div>
-      <div class="animal" id="animal" aria-hidden="true">
-        <svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="32" fill="#f5a425"/><circle cx="40" cy="48" r="4" fill="#3a2510"/><circle cx="60" cy="48" r="4" fill="#3a2510"/><path d="M40 65 Q50 75 60 65" stroke="#3a2510" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M28 30 L34 42 M72 30 L66 42" stroke="#f5a425" stroke-width="8" stroke-linecap="round"/></svg>
+
+    <div class="toggle-row">
+      <label><input type="checkbox" id="tBack" checked /> back</label>
+      <label><input type="checkbox" id="tAnimal" checked /> animal</label>
+      <label><input type="checkbox" id="tFront" checked /> front</label>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage" id="stage" data-mode="native-p">
+        <div class="layer" id="back"></div>
+        <div class="animal" id="animal" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="32" fill="#f5a425"/><circle cx="40" cy="48" r="4" fill="#3a2510"/><circle cx="60" cy="48" r="4" fill="#3a2510"/><path d="M40 65 Q50 75 60 65" stroke="#3a2510" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M28 30 L34 42 M72 30 L66 42" stroke="#f5a425" stroke-width="8" stroke-linecap="round"/></svg>
+        </div>
+        <div class="layer" id="front"></div>
       </div>
-      <div class="layer" id="front"></div>
     </div>
+
     <div class="meta" id="meta">loading…</div>
     <div class="ctl">
       <button onclick="A.back?.play(); A.front?.play();">Play</button>
@@ -71,6 +88,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <script>
   const A = {};
+  let variant = "portrait";
+
+  function clear() {
+    if (A.back)  { A.back.destroy();  A.back = null; }
+    if (A.front) { A.front.destroy(); A.front = null; }
+  }
   function loadInto(id, path) {
     return lottie.loadAnimation({
       container: document.getElementById(id),
@@ -81,34 +104,48 @@
       rendererSettings: { preserveAspectRatio: "xMidYMid slice", clearCanvas: true, dpr: window.devicePixelRatio || 2 },
     });
   }
-  A.back  = loadInto("back",  "lottie-bg/bg-back.json");
-  A.front = loadInto("front", "lottie-bg/bg-front.json");
-  let loaded = 0;
-  const onReady = () => {
-    loaded++;
-    if (loaded === 2) {
-      const meta = `back: ${A.back.totalFrames}f · front: ${A.front.totalFrames}f · ${(A.back.totalFrames/A.back.frameRate).toFixed(2)}s loop`;
-      document.getElementById("meta").textContent = meta;
-    }
-  };
-  A.back.addEventListener("DOMLoaded", onReady);
-  A.front.addEventListener("DOMLoaded", onReady);
-  const onFail = () => {
-    document.getElementById("errbox").innerHTML =
-      `<div class="err">Couldn't load <code>lottie-bg/bg-back.json</code> or <code>lottie-bg/bg-front.json</code>. Reload after generating.</div>`;
-  };
-  A.back.addEventListener("data_failed", onFail);
-  A.front.addEventListener("data_failed", onFail);
+  function loadVariant(v) {
+    clear();
+    const back  = v === "portrait" ? "lottie-bg/bg-portrait-back.json"  : "lottie-bg/bg-back.json";
+    const front = v === "portrait" ? "lottie-bg/bg-portrait-front.json" : "lottie-bg/bg-front.json";
+    A.back  = loadInto("back",  back);
+    A.front = loadInto("front", front);
+    let loaded = 0;
+    const ready = () => {
+      loaded++;
+      if (loaded === 2) {
+        document.getElementById("meta").textContent =
+          `${v} · back+front loaded · ${A.back.totalFrames}f @ ${A.back.frameRate}fps · ${(A.back.totalFrames/A.back.frameRate).toFixed(2)}s loop`;
+      }
+    };
+    A.back.addEventListener("DOMLoaded", ready);
+    A.front.addEventListener("DOMLoaded", ready);
+  }
+  loadVariant(variant);
 
   // Toggles
   document.getElementById("tBack").onchange   = e => document.getElementById("back").style.display   = e.target.checked ? "" : "none";
   document.getElementById("tFront").onchange  = e => document.getElementById("front").style.display  = e.target.checked ? "" : "none";
   document.getElementById("tAnimal").onchange = e => document.getElementById("animal").style.display = e.target.checked ? "" : "none";
 
-  // Aspect pills
-  document.querySelectorAll(".pill").forEach(b => {
+  // Variant pills
+  document.querySelectorAll("#variants .pill").forEach(b => {
     b.onclick = () => {
-      document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll("#variants .pill").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      variant = b.dataset.variant;
+      // reset aspect to native of variant
+      const native = variant === "portrait" ? "native-p" : "native-l";
+      document.querySelectorAll("#modes .pill").forEach(x => x.classList.toggle("active", x.dataset.mode === native));
+      document.getElementById("stage").dataset.mode = native;
+      loadVariant(variant);
+    };
+  });
+
+  // Aspect pills
+  document.querySelectorAll("#modes .pill").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll("#modes .pill").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
       document.getElementById("stage").dataset.mode = b.dataset.mode;
     };
