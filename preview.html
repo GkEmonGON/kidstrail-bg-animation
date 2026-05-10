@@ -20,19 +20,25 @@
   .stage[data-mode="phone-l"]   { aspect-ratio:19.5/9; }
   .stage[data-mode="phone-p"]   { aspect-ratio:9/19.5; max-width:380px; margin:0 auto; }
   .stage[data-mode="native"]    { aspect-ratio:3/2; }
-  #anim { width:100%; height:100%; display:block; }
+  .layer { position:absolute; inset:0; }
+  .layer canvas, .layer svg { width:100% !important; height:100% !important; }
+  .animal { position:absolute; left:50%; top:62%; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
+  .animal svg { width:160px; height:160px; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25)); animation:bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
   .ctl { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px; }
   button.ghost { background:#fff; color:var(--ink); border:1px solid rgba(0,0,0,.1); }
   .err { background:#fff3f3; color:#992222; border:1px solid #f0c; padding:14px 16px; border-radius:12px; margin-top:12px; font-size:14px; }
   .err code { background:rgba(0,0,0,.06); padding:2px 6px; border-radius:6px; }
   .meta { text-align:center; font-size:12px; opacity:.6; margin-top:8px; }
+  .toggle-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  label { font-size:13px; }
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>KidsTrail BG · live preview</h1>
+      <h1>KidsTrail BG · live preview (back + animal + front)</h1>
       <div class="pills" id="modes">
         <button class="pill active" data-mode="native">Native 3:2</button>
         <button class="pill" data-mode="tablet-l">Tablet L 16:10</button>
@@ -41,39 +47,65 @@
         <button class="pill" data-mode="phone-p">Phone P 9:19.5</button>
       </div>
     </header>
-    <div class="stage" id="stage" data-mode="native"><div id="anim"></div></div>
+    <div class="toggle-row" style="margin-bottom:10px;">
+      <label><input type="checkbox" id="tBack" checked /> back layer (sky/hills/trees/vines)</label>
+      <label><input type="checkbox" id="tAnimal" checked /> animal placeholder</label>
+      <label><input type="checkbox" id="tFront" checked /> front layer (grass/leaves/flowers/particles)</label>
+    </div>
+    <div class="stage" id="stage" data-mode="native">
+      <div class="layer" id="back"></div>
+      <div class="animal" id="animal" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="32" fill="#f5a425"/><circle cx="40" cy="48" r="4" fill="#3a2510"/><circle cx="60" cy="48" r="4" fill="#3a2510"/><path d="M40 65 Q50 75 60 65" stroke="#3a2510" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M28 30 L34 42 M72 30 L66 42" stroke="#f5a425" stroke-width="8" stroke-linecap="round"/></svg>
+      </div>
+      <div class="layer" id="front"></div>
+    </div>
     <div class="meta" id="meta">loading…</div>
     <div class="ctl">
-      <button onclick="A.play()">Play</button>
-      <button onclick="A.pause()">Pause</button>
-      <button onclick="A.goToAndStop(0,true)">Reset</button>
+      <button onclick="A.back?.play(); A.front?.play();">Play</button>
+      <button onclick="A.back?.pause(); A.front?.pause();">Pause</button>
+      <button onclick="A.back?.goToAndStop(0,true); A.front?.goToAndStop(0,true);">Reset</button>
       <button class="ghost" onclick="location.reload()">Reload JSON</button>
     </div>
     <div id="errbox"></div>
   </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <script>
-  const ANIM_PATH = "lottie-bg/bg.json";
-  let A;
-  function load() {
-    A = lottie.loadAnimation({
-      container: document.getElementById("anim"),
+  const A = {};
+  function loadInto(id, path) {
+    return lottie.loadAnimation({
+      container: document.getElementById(id),
       renderer: "canvas",
       loop: true,
       autoplay: true,
-      path: ANIM_PATH + "?t=" + Date.now(),
+      path: path + "?t=" + Date.now(),
       rendererSettings: { preserveAspectRatio: "xMidYMid slice", clearCanvas: true, dpr: window.devicePixelRatio || 2 },
     });
-    A.addEventListener("DOMLoaded", () => {
-      document.getElementById("meta").textContent =
-        `loaded ${ANIM_PATH} · ${A.totalFrames} frames @ ${A.frameRate}fps · ${(A.totalFrames/A.frameRate).toFixed(2)}s`;
-    });
-    A.addEventListener("data_failed", () => {
-      document.getElementById("errbox").innerHTML =
-        `<div class="err">Couldn't load <code>${ANIM_PATH}</code>. ` +
-        `Export Lottie JSON from Creator → save as <code>${ANIM_PATH}</code>, then click Reload JSON.</div>`;
-    });
   }
+  A.back  = loadInto("back",  "lottie-bg/bg-back.json");
+  A.front = loadInto("front", "lottie-bg/bg-front.json");
+  let loaded = 0;
+  const onReady = () => {
+    loaded++;
+    if (loaded === 2) {
+      const meta = `back: ${A.back.totalFrames}f · front: ${A.front.totalFrames}f · ${(A.back.totalFrames/A.back.frameRate).toFixed(2)}s loop`;
+      document.getElementById("meta").textContent = meta;
+    }
+  };
+  A.back.addEventListener("DOMLoaded", onReady);
+  A.front.addEventListener("DOMLoaded", onReady);
+  const onFail = () => {
+    document.getElementById("errbox").innerHTML =
+      `<div class="err">Couldn't load <code>lottie-bg/bg-back.json</code> or <code>lottie-bg/bg-front.json</code>. Reload after generating.</div>`;
+  };
+  A.back.addEventListener("data_failed", onFail);
+  A.front.addEventListener("data_failed", onFail);
+
+  // Toggles
+  document.getElementById("tBack").onchange   = e => document.getElementById("back").style.display   = e.target.checked ? "" : "none";
+  document.getElementById("tFront").onchange  = e => document.getElementById("front").style.display  = e.target.checked ? "" : "none";
+  document.getElementById("tAnimal").onchange = e => document.getElementById("animal").style.display = e.target.checked ? "" : "none";
+
+  // Aspect pills
   document.querySelectorAll(".pill").forEach(b => {
     b.onclick = () => {
       document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
@@ -81,7 +113,6 @@
       document.getElementById("stage").dataset.mode = b.dataset.mode;
     };
   });
-  load();
 </script>
 </body>
 </html>
