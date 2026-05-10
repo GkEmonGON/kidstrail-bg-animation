@@ -106,8 +106,8 @@
   }
   function loadVariant(v) {
     clear();
-    const back  = v === "portrait" ? "lottie-bg/bg-portrait-back.json"  : "lottie-bg/bg-back.json";
-    const front = v === "portrait" ? "lottie-bg/bg-portrait-front.json" : "lottie-bg/bg-front.json";
+    const back  = "assets/animal/back.json";
+    const front = "assets/animal/front.json";
     A.back  = loadInto("back",  back);
     A.front = loadInto("front", front);
     let loaded = 0;
