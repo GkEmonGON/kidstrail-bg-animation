@@ -3,26 +3,40 @@
 Future Claude: read this first when user asks for parallax / multi-layer Lottie BG animation.
 
 ## Goal pattern
-Build layered Lottie BG for kids storybook app. Two files:
-- **back.json** = renders BEHIND animal (sky, hills, trees, vines)
-- **front.json** = renders IN FRONT of animal (grass, big-leaves, flowers, particles)
-- App stacks: `back` → `animal` → `front` (Flutter Stack)
-- Target: portrait 1080×1920 (9:16), seamless 8s loop @ 30fps, **<300 KB per JSON**
+Build layered Lottie BG for kids storybook app. Each variant (animal, bird, fish, ...) has two files:
+- **back.json** = renders BEHIND character (sky/hills/trees/vines analogue per theme)
+- **front.json** = renders IN FRONT of character (grass/big-leaves/flowers/particles analogue per theme)
+- App stacks: `back` → `character` → `front` (Flutter Stack)
+- Target: portrait 1080×1920 (9:16), seamless 8s loop @ 30fps, **≤300 KB per JSON (hard cap enforced in builder)**
+- Front layer rule: NEVER include a layer that competes with the main character (e.g. fish-school removed from fish/front.json — would defocus child's eye from main fish)
+
+## Preview rule — every variant gets 3 HTMLs
+For variant `{variant}`, always create all three previews. Re-use the existing patterns:
+- **preview-{variant}-back.html** — back.json only, white stage
+- **preview-{variant}-front.html** — front.json only, checkered dark stage (shows transparency)
+- **preview-{variant}.html** — stacked: back + character SVG placeholder + front, with aspect + layer toggles
+
+Files for `animal` are unprefixed (legacy): `preview.html`, `preview-back.html`, `preview-front.html`. All new variants follow the `preview-{variant}-*.html` pattern.
 
 ## Project structure
 ```
 KidsTrail/
-├── CLAUDE.md                ← this file
-├── preview.html             ← stacked preview (back + animal placeholder + front)
-├── preview-back.html        ← back-only player
-├── preview-front.html       ← front-only player
-└── assets/animal/
-    ├── back.json            ← Lottie (4 layers, embedded webps)
-    ├── front.json           ← Lottie (4 layers, embedded webps)
-    ├── back/                ← source PNGs (sky, hills, trees, vines)
-    ├── front/               ← source PNGs (grass, big-leaves, flowers, particles)
-    ├── back-opt/            ← webp optimized (for Creator import via jsDelivr URLs)
-    └── front-opt/           ← webp optimized
+├── CLAUDE.md                       ← this file
+├── preview.html                    ← animal stacked preview (legacy, unprefixed)
+├── preview-back.html               ← animal back-only
+├── preview-front.html              ← animal front-only
+├── preview-bird.html               ← bird stacked
+├── preview-bird-front.html         ← bird front-only (bird has only bg.json + front concept)
+├── preview-fish.html               ← fish stacked
+├── preview-fish-back.html          ← fish back-only
+├── preview-fish-front.html         ← fish front-only
+├── scripts/
+│   ├── gen_bubbles.py              ← procedural bubbles PNG generator (PIL)
+│   └── build_fish_lottie.py        ← reusable Lottie builder w/ 300 KB hard guard
+└── assets/
+    ├── animal/  { back.json, front.json, back/, front/, back-opt/, front-opt/ }
+    ├── bird/    { bg.json, front-opt/ }
+    └── fish/    { back.json, front.json, back/, front/, back-opt/, front-opt/ }
 ```
 
 ## Layer roles (top → bottom = front → back in array)
@@ -130,12 +144,55 @@ Stack(fit: StackFit.expand, children: [
 - GitHub: `https://github.com/GkEmonGON/kidstrail-bg-animation` (public, GkEmonGON)
 - jsDelivr base: `https://cdn.jsdelivr.net/gh/GkEmonGON/kidstrail-bg-animation@main/`
 
+## LottieFiles Creator URLs (persistent — bookmark)
+LottieFiles workspace: `cfaaeeca-95f3-4983-ae24-1b6eb132abc8`
+
+**Animal project** (jungle theme, ID `ee6d09f7-f2a4-4832-9ae0-80bb222b4b3b`):
+- Back file: https://creator.lottiefiles.com/?fileId=f0d87e92-6622-4fe9-a45a-2cd10059063a
+- Front file: https://creator.lottiefiles.com/?fileId=b108fe9e-4abc-4c29-aff8-9c920c97967e
+
+**Bird project** (sky theme, ID `13b438f8-cc3d-4556-aca0-648a0f4e6a74`):
+- Single BG file: https://creator.lottiefiles.com/?fileId=646cec1d-06a6-4b74-804c-affdbf45ae47
+
+MCP attaches to whichever Creator tab is **active**. Open ONE tab at a time for MCP work.
+
 ## Preview commands
 ```bash
 # Start local server (project root)
 python3 -m http.server 8765
-# Open in browser
-http://127.0.0.1:8765/preview.html         # stacked
-http://127.0.0.1:8765/preview-back.html    # back only
-http://127.0.0.1:8765/preview-front.html   # front only (checkered = transparent)
+
+# Animal (legacy unprefixed)
+http://127.0.0.1:8765/preview.html              # stacked
+http://127.0.0.1:8765/preview-back.html         # back only
+http://127.0.0.1:8765/preview-front.html        # front only (checkered = transparent)
+
+# Bird
+http://127.0.0.1:8765/preview-bird.html         # stacked
+http://127.0.0.1:8765/preview-bird-front.html   # front only
+
+# Fish
+http://127.0.0.1:8765/preview-fish.html         # stacked (clownfish placeholder)
+http://127.0.0.1:8765/preview-fish-back.html    # back only
+http://127.0.0.1:8765/preview-fish-front.html   # front only
 ```
+
+## Builder script convention
+Reusable Python Lottie builder lives in `scripts/build_{variant}_lottie.py` (e.g. `build_fish_lottie.py`). Pattern:
+- `MAX_KB = 300` hard cap — raises `SystemExit` if any output JSON exceeds it
+- Per-layer motion factories: `m_static`, `m_pan_y(amp)`, `m_pan_x(amp)`, `m_bob_y(amp)`, `m_bob_x(amp)`, `m_figure8(ax, ay)`, `m_breathe(pct)`, `m_pan_y_breathe(pan, pct)`
+- Per-layer `y_offset` / `x_offset` override for repositioning (merge into motion dict: `{**m_bob_y(15), "y_offset": 380}`)
+- Layer order in `BACK` / `FRONT` lists = front-to-back (index 0 = top)
+- Embeds webps as data URIs — no external file deps at runtime
+
+## Fish variant motion table (current)
+| Layer | Slot | Motion |
+|---|---|---|
+| water-bg (opaque) | sky | breathe ±5% |
+| distant-reef | hills | pan y -50 + breathe ±2% |
+| kelp-forest | trees | pan y -70 + breathe ±3% |
+| coral-cluster | vines | bob x ±10 |
+| sand-floor | grass | pan y -8 |
+| big-seaweed | big-leaves | bob y ±6 |
+| bubbles-particles | particles | figure-8 ax=40 ay=60 |
+
+Fish school (clownfish/angelfish/tang/puffer/seahorse/blue-tang) PNG kept on disk at `assets/fish/front/fish-school.png` but **NOT embedded in front.json** — would compete with app's main character fish. Toggle on by adding back to `FRONT` list in builder if needed for "underwater zoo" mode.
