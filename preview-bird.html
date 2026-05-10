@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bird Sky BG — KidsTrail</title>
+<style>
+body{margin:0;min-height:100vh;background:#fbebcf;font-family:system-ui;padding:16px;color:#3a2510}
+.wrap{max-width:600px;margin:0 auto;text-align:center}
+h1{font-size:16px;margin:0 0 12px}
+.stage{background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.08);overflow:hidden;position:relative;aspect-ratio:9/16;width:100%;max-width:480px;margin:0 auto}
+#anim{width:100%;height:100%}
+.bird{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);z-index:5;pointer-events:none;width:96px;height:96px;animation:fly 3s ease-in-out infinite}
+@keyframes fly{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,calc(-50% - 12px))}}
+.bird svg{width:100%;height:100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25))}
+.meta{font-size:12px;opacity:.6;margin-top:8px}
+</style></head>
+<body><div class="wrap">
+<h1>bg.json — all 8 sky layers (bird stacks ON TOP)</h1>
+<div class="stage">
+  <div id="anim"></div>
+  <div class="bird">
+    <svg viewBox="0 0 64 64"><path d="M8 32 Q20 14 32 22 Q44 14 56 32 Q44 26 32 32 Q20 26 8 32 Z" fill="#3a2510"/></svg>
+  </div>
+</div>
+<div class="meta" id="meta">loading…</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+const A = lottie.loadAnimation({container:document.getElementById("anim"),renderer:"canvas",loop:true,autoplay:true,path:"assets/bird/bg.json?t="+Date.now(),rendererSettings:{preserveAspectRatio:"xMidYMid slice",clearCanvas:true,dpr:window.devicePixelRatio||2}});
+A.addEventListener("DOMLoaded",()=>document.getElementById("meta").textContent=`${A.totalFrames}f @ ${A.frameRate}fps · ${(A.totalFrames/A.frameRate).toFixed(2)}s · bird flies on top`);
+</script></body></html>

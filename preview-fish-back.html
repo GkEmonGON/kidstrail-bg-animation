@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Fish Back — KidsTrail</title>
+<style>
+body{margin:0;min-height:100vh;background:#cfeefb;font-family:system-ui;padding:16px;color:#103a4a}
+.wrap{max-width:600px;margin:0 auto;text-align:center}
+h1{font-size:16px;margin:0 0 12px}
+.stage{background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.08);overflow:hidden;aspect-ratio:9/16;width:100%;max-width:480px;margin:0 auto}
+#anim{width:100%;height:100%}
+.meta{font-size:12px;opacity:.6;margin-top:8px}
+</style></head>
+<body><div class="wrap">
+<h1>fish/back.json — water-bg/distant-reef/kelp-forest/coral-cluster (renders BEHIND fish)</h1>
+<div class="stage"><div id="anim"></div></div>
+<div class="meta" id="meta">loading…</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+const A = lottie.loadAnimation({container:document.getElementById("anim"),renderer:"canvas",loop:true,autoplay:true,path:"assets/fish/back.json?t="+Date.now(),rendererSettings:{preserveAspectRatio:"xMidYMid slice",clearCanvas:true,dpr:window.devicePixelRatio||2}});
+A.addEventListener("DOMLoaded",()=>document.getElementById("meta").textContent=`${A.totalFrames}f @ ${A.frameRate}fps · ${(A.totalFrames/A.frameRate).toFixed(2)}s`);
+</script></body></html>
