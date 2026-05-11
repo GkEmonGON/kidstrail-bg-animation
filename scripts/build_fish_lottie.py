@@ -19,6 +19,7 @@ def load_webp_b64(path: Path):
 
 
 def cover_scale(img_w, img_h, zoom=1.15):
+    """zoom=1.15 = over-cover (no edges visible); zoom=1.0 = exact cover (min overflow); <1.0 = letterbox."""
     return max(CANVAS_W / img_w, CANVAS_H / img_h) * zoom
 
 
@@ -92,9 +93,26 @@ def breathe_scale(amp_pct, n_kfs, base_scale):
 
 
 def build_layer(ind, name, ref_id, img_w, img_h, motion):
-    """motion = dict with optional pan, scale, y_offset, x_offset keys."""
-    base_scale = cover_scale(img_w, img_h)
-    ox, oy = center_offset(img_w, img_h, base_scale)
+    """motion = dict with optional pan, scale, y_offset, x_offset, zoom, fit_mode, anchor keys.
+    fit_mode: 'cover' (default, scale by max) | 'fit_width' (scale to canvas width, letterbox vert).
+    anchor:   'center' (default) | 'top' | 'bottom' — only used when fit_mode='fit_width'.
+    """
+    fit_mode = motion.get("fit_mode", "cover")
+    zoom = motion.get("zoom", 1.15)
+    if fit_mode == "fit_width":
+        base_scale = (CANVAS_W / img_w) * zoom
+        disp_h = img_h * base_scale
+        anchor = motion.get("anchor", "center")
+        ox = (CANVAS_W - img_w * base_scale) / 2  # always 0 when zoom=1.0
+        if anchor == "top":
+            oy = 0
+        elif anchor == "bottom":
+            oy = CANVAS_H - disp_h
+        else:
+            oy = (CANVAS_H - disp_h) / 2
+    else:
+        base_scale = cover_scale(img_w, img_h, zoom=zoom)
+        ox, oy = center_offset(img_w, img_h, base_scale)
     ox += motion.get("x_offset", 0)
     oy += motion.get("y_offset", 0)
 
@@ -217,8 +235,9 @@ def m_pan_y_breathe(pan_amp, breathe_pct):
 
 
 # ---- BACK layers (front-to-back order in array) ----
+# coral-cluster: fit_width + anchor top — content is in top corners, must preserve full horizontal extent. Water-bg behind fills any letterbox area.
 BACK = [
-    ("coral-cluster", ROOT / "assets/fish/back-opt/coral-cluster.webp", m_bob_x(10)),
+    ("coral-cluster", ROOT / "assets/fish/back-opt/coral-cluster.webp", {**m_bob_x(10), "fit_mode": "fit_width", "anchor": "top", "zoom": 1.0}),
     ("kelp-forest",   ROOT / "assets/fish/back-opt/kelp-forest.webp",   m_pan_y_breathe(70, 3)),
     ("distant-reef",  ROOT / "assets/fish/back-opt/distant-reef.webp",  m_pan_y_breathe(50, 2)),
     ("water-bg",      ROOT / "assets/fish/back-opt/water-bg.webp",      m_breathe(5)),
@@ -226,9 +245,10 @@ BACK = [
 
 # ---- FRONT layers (front-to-back order in array) ----
 # fish-school REMOVED — would defocus main character fish placed by app on top of back.json
+# big-seaweed: fit_width + anchor top — edge fronds must reach canvas left/right edges; transparent below is fine.
 FRONT = [
     ("bubbles-particles", ROOT / "assets/fish/front-opt/bubbles-particles.webp", m_figure8(40, 60)),
-    ("big-seaweed",       ROOT / "assets/fish/front-opt/big-seaweed.webp",       m_bob_y(6)),
+    ("big-seaweed",       ROOT / "assets/fish/front-opt/big-seaweed.webp",       {**m_bob_y(6), "fit_mode": "fit_width", "anchor": "top", "zoom": 1.0}),
     # sand-floor: y_offset +40 to absorb ~74 px transparent padding in source PNG that would otherwise leave water-bg gap below sand at canvas bottom
     ("sand-floor",        ROOT / "assets/fish/front-opt/sand-floor.webp",        {**m_pan_y(8), "y_offset": 40}),
 ]
