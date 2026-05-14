@@ -145,8 +145,10 @@ LAYERS_FRONT = [
     # ===== FOREGROUND CLOUD (close, in front of char) =====
     {"name": "fr-cloud-foreground", "img": "sky-cloud.webp", "w": 280, "pos": (980, 350),
      "motion": m_bob((980, 350), dx=30, dy=12, phase_frames=20, cycles=0.5)},
-    # ===== PERCH-BRANCH (depth-contact, hangs from top edge) =====
-    {"name": "fr-perch-branch", "img": "bird-perch-branch.webp", "w": 490, "pos": (820, 0),
+    # ===== PERCH-BRANCH (depth-contact, extends OFFSCREEN-RIGHT + content above canvas top) =====
+    # pos_x pushed beyond canvas right so trunk extends into off-canvas right
+    # pos_y negative so content touches/exceeds canvas top edge (no sky-gap)
+    {"name": "fr-perch-branch", "img": "bird-perch-branch.webp", "w": 620, "pos": (1080, -40),
      "anchor": "top", "motion": m_wiggle(amp_deg=3.0, phase_frames=12)},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
@@ -165,24 +167,24 @@ LAYERS_FRONT = [
      "anchor": "bottom", "motion": m_wiggle(amp_deg=4.0, phase_frames=18, rot_offset=4)},
     {"name": "fr-flower-R2", "img": "flower-cluster.webp", "w": 95,  "pos": (940, 1050),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=4.5, phase_frames=56, rot_offset=-5)},
-    # Bushes — bottom strip, smaller than animal-v2 since less ground room
-    {"name": "fr-bush-L1", "img": "back-bush.webp", "w": 220, "pos": (130, 1090),
+    # Bushes — MIX of round (back-bush) + tall-teardrop (back-bush-2) for variety
+    {"name": "fr-bush-L1", "img": "back-bush.webp",   "w": 220, "pos": (130, 1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=8,  rot_offset=-3)},
-    {"name": "fr-bush-L2", "img": "back-bush.webp", "w": 180, "pos": (320, 1085),
+    {"name": "fr-bush-L2", "img": "back-bush-2.webp", "w": 180, "pos": (320, 1085),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.8, phase_frames=33, rot_offset=4)},
-    {"name": "fr-bush-R1", "img": "back-bush.webp", "w": 200, "pos": (770, 1090),
+    {"name": "fr-bush-R1", "img": "back-bush-2.webp", "w": 200, "pos": (770, 1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=18, rot_offset=2)},
-    {"name": "fr-bush-R2", "img": "back-bush.webp", "w": 240, "pos": (970, 1095),
+    {"name": "fr-bush-R2", "img": "back-bush.webp",   "w": 240, "pos": (970, 1095),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=48, rot_offset=-3)},
     # ===== CORNER FILLERS (rule: 3-piece stack at each bottom corner) =====
-    # LEFT corner stack
-    {"name": "fr-corner-bush-L", "img": "back-bush.webp", "w": 180, "pos": (10, 1020),
+    # LEFT corner stack (uses back-bush-2 for variety in corners)
+    {"name": "fr-corner-bush-L", "img": "back-bush-2.webp", "w": 180, "pos": (10, 1020),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=29, rot_offset=-3)},
     {"name": "fr-corner-flower-L", "img": "flower-cluster.webp", "w": 100, "pos": (15, 985),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=4.0, phase_frames=7, rot_offset=-5)},
     {"name": "fr-corner-grass-L", "img": "front-grass-tuft.webp", "w": 130, "pos": (-10, 1075),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=7.0, phase_frames=24, rot_offset=-4)},
-    # RIGHT corner stack
+    # RIGHT corner stack (uses round back-bush for contrast with bush-2 on left)
     {"name": "fr-corner-bush-R", "img": "back-bush.webp", "w": 180, "pos": (1070, 1020),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=51, rot_offset=4)},
     {"name": "fr-corner-flower-R", "img": "flower-cluster.webp", "w": 100, "pos": (1065, 985),
