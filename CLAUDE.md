@@ -19,6 +19,15 @@ Future Claude: read this first when user asks for parallax / multi-layer Lottie 
 **Client provides character PNG** (Gemini-generated) — bg-key it (60-70% bg keyed in lion test).
 **Client speaks Banglish** — full glossary in build_lessons.md.
 
+**⚠️ MOTION & DIRECTION (bird-v2 review 2026-05-14)** — apply to ALL future variants:
+- **Asset-orientation MUST match traverse direction** — check beak/eyes/wheels. If asset faces LEFT and you traverse L→R, set `mirror: True` (negative scale_x) in builder. Bird-v2 mistake: birds flew backwards because PNG faced left + L→R traverse without mirror.
+- **Motion-type by category**: directional creatures (birds, fish, vehicles) → `m_traverse` linear; hovering things (fireflies, sparkles, bees) → `m_drift` figure-8; static decor → `m_wiggle` rotation.
+- **Vary speeds + directions** across same-asset instances. 3+ traversing instances need 200-400px range variation + 60/40 direction mix (else flock looks synced/mechanical).
+- **Edge-anchored decor MUST extend offscreen** — top decor pos_y NEGATIVE (-20 to -40); bottom decor pos_y ≥ 1080; side decor pos_x out of 0-1080 range. "Growing from outside the frame" reads as anchored, not floating.
+- **Asset reuse threshold**: if same asset used 5+ times in scene, generate 1 new variant (~$0.04) and mix across instances. Bird-v2 mistake: 1 bush asset reused 6× → client flagged "too samey".
+- **Trace motion paths before ship**: animated cloud y-band must NOT overlap sun y-band (cloud "eats" sun otherwise). Birds shouldn't fly through char zone.
+- **Builder feature requirement**: `mirror: True` per-spec flag MUST be in every variant's builder (negate scale_x in build_image_layer).
+
 ---
 
 ## ⭐ NEW TARGET PATTERN (client reference, 2026-05-12) — USE THIS GOING FORWARD
