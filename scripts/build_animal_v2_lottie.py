@@ -202,10 +202,10 @@ LAYERS_FRONT = [
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=36, rot_offset=-4)},
     {"name": "fr-bush-R3", "img": "back-bush.webp", "w": 270, "pos": (1020, 1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=58, rot_offset=3)},
-    # ===== LION-PAW-COVER BUSH (client req: bigger + moved down to lion's paw level) =====
-    {"name": "fr-paw-bush-L", "img": "back-bush.webp", "w": 420, "pos": (220, 1075),
+    # ===== LION-PAW-COVER BUSH (client req v2: even bigger) =====
+    {"name": "fr-paw-bush-L", "img": "back-bush.webp", "w": 490, "pos": (220, 1075),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=11)},
-    {"name": "shadow-paw-bush-L", "type": "shadow", "pos": (220, 1080), "sw": 340, "sh": 32, "opa": 28},
+    {"name": "shadow-paw-bush-L", "type": "shadow", "pos": (220, 1080), "sw": 400, "sh": 36, "opa": 28},
 ]
 
 
