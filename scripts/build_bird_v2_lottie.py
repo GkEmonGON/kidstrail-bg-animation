@@ -136,6 +136,21 @@ LAYERS_BACK = [
          {"t": 0,  "s": [-250, 460, 0]},
          {"t": 90, "s": [1250, 500, 0]},
      ]}},
+    # ===== CHASE PAIR (2 birds same direction + speed, slight x offset = chasing) =====
+    # bird-chase-A: leader (slightly ahead in x)
+    {"name": "back-chase-A", "img": "bird-small-flying-bird.webp", "w": 75,
+     "pos": (-200, 320), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-200, 320, 0]},
+         {"t": 90, "s": [1300, 320, 0]},
+     ]}},
+    # bird-chase-B: chaser (140px behind, slightly lower)
+    {"name": "back-chase-B", "img": "bird-small-flying-bird.webp", "w": 65,
+     "pos": (-340, 350), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-340, 350, 0]},
+         {"t": 90, "s": [1160, 350, 0]},
+     ]}},
     # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
     # cloud-traverse y=240 (was 200) — below sun zone
     {"name": "back-cloud-traverse", "img": "sky-cloud.webp", "w": 220, "pos": (0, 240),
@@ -189,6 +204,34 @@ LAYERS_FRONT = [
     # ===== PERCH-BRANCH LEFT (mirrored, extends OFFSCREEN-LEFT) =====
     {"name": "fr-perch-branch-L", "img": "bird-perch-branch.webp", "w": 520, "pos": (0, -20),
      "anchor": "top", "mirror": True, "motion": m_wiggle(amp_deg=3.0, phase_frames=42)},
+    # ===== FALLING LEAVES (client req: 2 leaves drift top→bottom in foreground) =====
+    # Each leaf: linear y traverse from above-canvas to below-canvas + slight x sway + rotation
+    {"name": "fr-falling-leaf-1", "img": "falling-leaf.webp", "w": 110,
+     "pos": (340, -80),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [320, -80,   0]},
+         {"t": 30, "s": [380, 240, 0]},
+         {"t": 60, "s": [310, 620, 0]},
+         {"t": 90, "s": [360, 1180, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [-15]},
+         {"t": 30, "s": [25]},
+         {"t": 60, "s": [-20]},
+         {"t": 90, "s": [30]},
+     ]}},
+    {"name": "fr-falling-leaf-2", "img": "falling-leaf.webp", "w": 90,
+     "pos": (760, -120),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [780, -120, 0]},
+         {"t": 25, "s": [720, 200,  0]},
+         {"t": 55, "s": [810, 580,  0]},
+         {"t": 90, "s": [740, 1180, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [10]},
+         {"t": 30, "s": [-30]},
+         {"t": 60, "s": [20]},
+         {"t": 90, "s": [-25]},
+     ]}},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
     {"name": "fr-grass-L1", "img": "front-grass-tuft.webp", "w": 180, "pos": (60, 1115),
