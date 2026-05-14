@@ -177,32 +177,35 @@ LAYERS_BACK = [
          {"t": 50, "s": [350, 530, 0]},   # near-pause mid-canvas
          {"t": 90, "s": [1300, 550, 0]},  # bursts to exit
      ]}},
-    # ===== SMALL FAR-DISTANCE LEAVES (back-layer depth-pair, ALWAYS top→bottom) =====
-    # Each leaf starts above canvas (offscreen), falls down. NO respawn tricks
-    # (those caused visible upward zoom during interp).
-    # Variation via STAGGERED pause-before-fall (different leaves start at different frames).
+    # ===== SMALL FAR-DISTANCE LEAVES (back-layer depth-pair, WILD chaos rotations) =====
+    # back-leaf-far-1: 50f FAST fall, big L-curve drift, 360° full spin
     {"name": "back-leaf-far-1", "img": "falling-leaf.webp", "w": 55,
      "pos": (440, -120),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [440, -120, 0]},
-         {"t": 30, "s": [420, 200,  0]},
-         {"t": 60, "s": [460, 600,  0]},
-         {"t": 90, "s": [430, 1180, 0]},
+         {"t": 15, "s": [550, 120, 0]},
+         {"t": 35, "s": [380, 600, 0]},
+         {"t": 50, "s": [490, 1180, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [-10]},
-         {"t": 45, "s": [25]},
-         {"t": 90, "s": [-15]},
+         {"t": 0,  "s": [0]},
+         {"t": 25, "s": [180]},
+         {"t": 50, "s": [360]},   # full spin during fall
+         {"t": 90, "s": [360]},   # hold once offscreen
      ]}},
+    # back-leaf-far-2: 35f pause, then 55f tumble fall with -2x spin (reverse direction)
     {"name": "back-leaf-far-2", "img": "falling-leaf.webp", "w": 70,
      "pos": (640, -180),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [640, -180, 0]},
-         {"t": 25, "s": [640, -180, 0]},  # paused offscreen 25 frames (delayed entry)
-         {"t": 90, "s": [620, 1180, 0]},  # falls in last 65 frames
+         {"t": 35, "s": [640, -180, 0]},
+         {"t": 55, "s": [780, 300, 0]},
+         {"t": 75, "s": [550, 700, 0]},
+         {"t": 90, "s": [700, 1200, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [15]},
-         {"t": 60, "s": [-20]},
-         {"t": 90, "s": [10]},
+         {"t": 0,  "s": [0]},
+         {"t": 35, "s": [0]},
+         {"t": 60, "s": [-120]},
+         {"t": 90, "s": [-280]},  # reverse spin
      ]}},
     # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
     # cloud-traverse y=240 (was 200) — below sun zone
@@ -258,101 +261,108 @@ LAYERS_FRONT = [
     # ===== PERCH-BRANCH LEFT (mirrored, extends OFFSCREEN-LEFT) =====
     {"name": "fr-perch-branch-L", "img": "bird-perch-branch.webp", "w": 520, "pos": (0, -20),
      "anchor": "top", "mirror": True, "motion": m_wiggle(amp_deg=3.0, phase_frames=42)},
-    # ===== FALLING LEAVES (ALWAYS top→bottom, gravity-realistic) =====
-    # Density via staggered offscreen-pause times (different leaves start falling at different frames).
-    # All leaves visible only when falling down. No respawn tricks (caused visible upward zoom).
-    # leaf-1: medium 110 — falls FULL loop, gentle sway
+    # ===== FALLING LEAVES (top→bottom only, WILD chaos: huge x-drifts + spins + varied speeds) =====
+    # leaf-1: medium 110 — slow 90f fall, big zigzag x-drift, double-spin
     {"name": "fr-falling-leaf-1", "img": "falling-leaf.webp", "w": 110,
      "pos": (340, -100),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [320, -100, 0]},
-         {"t": 30, "s": [380, 250, 0]},
-         {"t": 60, "s": [310, 620, 0]},
-         {"t": 90, "s": [360, 1180, 0]},
+         {"t": 0,  "s": [340, -100, 0]},
+         {"t": 20, "s": [180, 120, 0]},   # zags LEFT
+         {"t": 45, "s": [420, 400, 0]},   # zigs RIGHT
+         {"t": 70, "s": [240, 750, 0]},   # zags LEFT again
+         {"t": 90, "s": [380, 1180, 0]},  # exits
      ], "rot_kfs": [
-         {"t": 0,  "s": [-15]},
-         {"t": 30, "s": [25]},
-         {"t": 60, "s": [-20]},
-         {"t": 90, "s": [30]},
+         {"t": 0,  "s": [0]},
+         {"t": 45, "s": [360]},
+         {"t": 90, "s": [720]},   # 2 full spins
      ]}},
-    # leaf-2: medium 90 — DELAYED START (paused offscreen until t=20, then falls)
+    # leaf-2: medium 90 — pause 20f, then 70f S-curve fall with REVERSE spin
     {"name": "fr-falling-leaf-2", "img": "falling-leaf.webp", "w": 90,
      "pos": (760, -180),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [780, -180, 0]},
-         {"t": 20, "s": [780, -180, 0]},  # paused offscreen 20 frames
-         {"t": 50, "s": [720, 280, 0]},
-         {"t": 90, "s": [740, 1180, 0]},
+         {"t": 0,  "s": [760, -180, 0]},
+         {"t": 20, "s": [760, -180, 0]},
+         {"t": 45, "s": [930, 280, 0]},   # drifts right
+         {"t": 70, "s": [620, 700, 0]},   # then left
+         {"t": 90, "s": [800, 1180, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [10]},
-         {"t": 45, "s": [-30]},
-         {"t": 90, "s": [20]},
+         {"t": 0,  "s": [0]},
+         {"t": 45, "s": [-180]},
+         {"t": 90, "s": [-540]},  # 1.5 reverse spins
      ]}},
-    # leaf-3: small 60 — VERY DELAYED start (paused 40 frames), faster fall last 50f
+    # leaf-3: small 60 — pause 40f, then 50f FAST fall, tight rotation wobble
     {"name": "fr-falling-leaf-3", "img": "falling-leaf.webp", "w": 60,
      "pos": (170, -200),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [170, -200, 0]},
-         {"t": 40, "s": [170, -200, 0]},  # paused offscreen 40 frames
-         {"t": 90, "s": [220, 1180, 0]},
+         {"t": 40, "s": [170, -200, 0]},
+         {"t": 60, "s": [330, 280, 0]},   # drifts right
+         {"t": 90, "s": [80, 1180, 0]},   # drifts hard LEFT
      ], "rot_kfs": [
-         {"t": 0,  "s": [20]},
-         {"t": 50, "s": [-40]},
-         {"t": 90, "s": [-15]},
+         {"t": 0,  "s": [0]},
+         {"t": 50, "s": [70]},
+         {"t": 70, "s": [-40]},
+         {"t": 90, "s": [90]},
      ]}},
-    # leaf-4: large 130 — slow + dramatic sway, full path
+    # leaf-4: large 130 — slow 90f fall, dramatic S-sway, gentle ±90° wobble (no full spin)
     {"name": "fr-falling-leaf-4", "img": "falling-leaf.webp", "w": 130,
      "pos": (920, -120),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [920, -120, 0]},
-         {"t": 25, "s": [870, 180, 0]},
-         {"t": 50, "s": [970, 480, 0]},
-         {"t": 75, "s": [890, 800, 0]},
-         {"t": 90, "s": [950, 1180, 0]},
+         {"t": 22, "s": [780, 100,  0]},  # drift LEFT
+         {"t": 45, "s": [990, 400,  0]},  # drift RIGHT
+         {"t": 68, "s": [820, 700,  0]},  # drift LEFT again
+         {"t": 90, "s": [970, 1180, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [-25]},
-         {"t": 45, "s": [35]},
-         {"t": 90, "s": [-30]},
+         {"t": 0,  "s": [-30]},
+         {"t": 30, "s": [90]},
+         {"t": 60, "s": [-90]},
+         {"t": 90, "s": [60]},
      ]}},
-    # leaf-5: medium 95 — DELAYED start 30 frames, then quick fall
+    # leaf-5: medium 95 — pause 25f, then mid-speed fall, DOUBLE-spin tumble
     {"name": "fr-falling-leaf-5", "img": "falling-leaf.webp", "w": 95,
      "pos": (530, -180),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [530, -180, 0]},
-         {"t": 30, "s": [530, -180, 0]},  # paused offscreen 30 frames
+         {"t": 25, "s": [530, -180, 0]},
+         {"t": 55, "s": [670, 380, 0]},   # right
+         {"t": 80, "s": [400, 850, 0]},   # left
          {"t": 90, "s": [510, 1180, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [15]},
-         {"t": 60, "s": [-30]},
-         {"t": 90, "s": [20]},
+         {"t": 0,  "s": [0]},
+         {"t": 45, "s": [-360]},
+         {"t": 90, "s": [-720]},  # 2 reverse spins
      ]}},
-    # ===== FOREGROUND BIG LEAVES (closer to viewer = bigger = more realistic depth) =====
-    # big-leaf-1: w=200, full path with dramatic sway + rotation
+    # ===== FOREGROUND BIG LEAVES (closer to viewer = bigger = chaotic) =====
+    # big-leaf-1: w=200, MASSIVE x-drift ±250px, FULL 360° spin
     {"name": "fr-big-leaf-1", "img": "falling-leaf.webp", "w": 200,
      "pos": (180, -250),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [180, -250, 0]},
-         {"t": 25, "s": [130, 80,   0]},
-         {"t": 55, "s": [230, 500,  0]},
-         {"t": 90, "s": [160, 1200, 0]},
+         {"t": 22, "s": [380, 80,  0]},   # +200 right
+         {"t": 50, "s": [50, 480,  0]},   # -330 left (huge swing)
+         {"t": 75, "s": [310, 850, 0]},   # +260 right
+         {"t": 90, "s": [120, 1200, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [-35]},
-         {"t": 30, "s": [45]},
-         {"t": 60, "s": [-25]},
-         {"t": 90, "s": [30]},
+         {"t": 0,  "s": [0]},
+         {"t": 30, "s": [180]},
+         {"t": 60, "s": [-90]},
+         {"t": 90, "s": [270]},
      ]}},
-    # big-leaf-2: w=180, DELAYED start (paused 15f offscreen)
+    # big-leaf-2: w=180, pause 15f, GENTLE pendulum swing -45° to +45° (heavy leaf feel)
     {"name": "fr-big-leaf-2", "img": "falling-leaf.webp", "w": 180,
      "pos": (850, -200),
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [850, -200, 0]},
-         {"t": 15, "s": [850, -200, 0]},  # short pause
-         {"t": 50, "s": [890, 280, 0]},
-         {"t": 90, "s": [870, 1200, 0]},
+         {"t": 15, "s": [850, -200, 0]},
+         {"t": 40, "s": [980, 150, 0]},
+         {"t": 65, "s": [720, 600, 0]},   # big leftward swing
+         {"t": 90, "s": [890, 1200, 0]},
      ], "rot_kfs": [
-         {"t": 0,  "s": [20]},
-         {"t": 45, "s": [-40]},
-         {"t": 90, "s": [-15]},
+         {"t": 0,  "s": [45]},
+         {"t": 30, "s": [-45]},
+         {"t": 60, "s": [60]},
+         {"t": 90, "s": [-30]},
      ]}},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
