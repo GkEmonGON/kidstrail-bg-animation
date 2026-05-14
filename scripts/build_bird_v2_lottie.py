@@ -150,6 +150,33 @@ LAYERS_BACK = [
          {"t": 0,  "s": [-340, 350, 0]},
          {"t": 90, "s": [1160, 350, 0]},
      ]}},
+    # ===== EXTRA RANDOMIZED BIRDS (varied sizes + speeds + spatial offsets to spread temporally) =====
+    # bird-extra-1: starts MID-LOOP position (at canvas-x=450 at t=0) — invisible-snap at frame 90
+    # Achieved by setting END position to start + offscreen-exit, then loop back: -100 → 1500 over 90f
+    # At t=0 already at x=-100 (offscreen), enters canvas around t=6, exits ~t=66
+    {"name": "back-bird-x1", "img": "bird-small-flying-bird.webp", "w": 48,
+     "pos": (-100, 200), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-100, 210, 0]},
+         {"t": 90, "s": [1500, 190, 0]},
+     ]}},
+    # bird-extra-2: TINY + fast R→L, different y band (high), starts further offscreen for late entry
+    {"name": "back-bird-x2", "img": "bird-small-flying-bird.webp", "w": 42,
+     "pos": (1500, 160),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [1500, 150, 0]},
+         {"t": 40, "s": [1500, 150, 0]},  # offscreen pause until t=40 (different respawn time)
+         {"t": 90, "s": [-300, 170, 0]},
+     ]}},
+    # bird-extra-3: MEDIUM size, low altitude, slow with double-pause for stop-and-go feel
+    {"name": "back-bird-x3", "img": "bird-small-flying-bird.webp", "w": 78,
+     "pos": (-200, 540), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-200, 530, 0]},
+         {"t": 25, "s": [200, 545, 0]},
+         {"t": 50, "s": [350, 530, 0]},   # near-pause mid-canvas
+         {"t": 90, "s": [1300, 550, 0]},  # bursts to exit
+     ]}},
     # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
     # cloud-traverse y=240 (was 200) — below sun zone
     {"name": "back-cloud-traverse", "img": "sky-cloud.webp", "w": 220, "pos": (0, 240),
@@ -231,6 +258,50 @@ LAYERS_FRONT = [
          {"t": 30, "s": [-30]},
          {"t": 60, "s": [20]},
          {"t": 90, "s": [-25]},
+     ]}},
+    # ===== EXTRA FALLING LEAVES (varied sizes + staggered START y so they never share same frame-y) =====
+    # leaf-3: TINY (60px) — starts mid-canvas (already half-fallen at loop start), invisible snap from y=1180→y=400
+    # Trick: leaf is mid-air at t=0 (y=400), reaches y=1180 by t=50, then RESPAWNS at y=-100 via short jump and falls again
+    {"name": "fr-falling-leaf-3", "img": "falling-leaf.webp", "w": 60,
+     "pos": (170, 400),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [170, 400, 0]},
+         {"t": 35, "s": [220, 900, 0]},
+         {"t": 50, "s": [200, 1180, 0]},   # exits below
+         {"t": 51, "s": [180, -120, 0]},   # respawn above (1f snap = imperceptible since offscreen)
+         {"t": 90, "s": [200, 380, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [20]},
+         {"t": 30, "s": [-40]},
+         {"t": 60, "s": [25]},
+         {"t": 90, "s": [-15]},
+     ]}},
+    # leaf-4: LARGE (130px) — slowest fall, dramatic sway, full path
+    {"name": "fr-falling-leaf-4", "img": "falling-leaf.webp", "w": 130,
+     "pos": (920, -90),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [920, -90, 0]},
+         {"t": 25, "s": [870, 180, 0]},
+         {"t": 50, "s": [970, 480, 0]},
+         {"t": 75, "s": [890, 800, 0]},
+         {"t": 90, "s": [950, 1180, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [-25]},
+         {"t": 45, "s": [35]},
+         {"t": 90, "s": [-30]},
+     ]}},
+    # leaf-5: MEDIUM (95px) — starts already 60% fallen at loop init (different rhythm)
+    {"name": "fr-falling-leaf-5", "img": "falling-leaf.webp", "w": 95,
+     "pos": (530, 720),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [530, 720, 0]},
+         {"t": 25, "s": [490, 1180, 0]},  # exits at t=25
+         {"t": 26, "s": [550, -100, 0]},  # respawn above (1f snap, offscreen)
+         {"t": 90, "s": [510, 700, 0]},   # back to similar y for loop seam
+     ], "rot_kfs": [
+         {"t": 0,  "s": [15]},
+         {"t": 45, "s": [-30]},
+         {"t": 90, "s": [20]},
      ]}},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
