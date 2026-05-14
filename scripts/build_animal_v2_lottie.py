@@ -112,12 +112,16 @@ def m_traverse(y, x_start, x_end):
 # Ground line on back-base ≈ y=685. Tree-feet at y=800. Grass-bottom y=1020.
 # Stack order: index 0 = TOP. Shadow rendered LATER in array (= BEHIND its element).
 LAYERS_BACK = [
-    # ===== MID-GROUND TREE BASE BUSHES (push BELOW tree base so trunk fully hidden) =====
-    {"name": "tree-root-bush-L", "img": "back-bush.webp", "w": 340, "pos": (210, 840),
-     "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=11)},
+    # ===== BACK-LAYER BUTTERFLIES (client req: 3 butterflies in back + 3 in front for depth) =====
+    {"name": "back-butterfly-1", "img": "front-butterfly.webp", "w": 90, "pos": (180, 540),
+     "motion": m_drift((180, 540), dx=140, dy=80, phase_frames=14, scale_pulse=10, cycles=1.5)},
+    {"name": "back-butterfly-2", "img": "front-butterfly.webp", "w": 75, "pos": (700, 520),
+     "motion": m_drift((700, 520), dx=120, dy=70, phase_frames=42, scale_pulse=12, cycles=1.75)},
+    {"name": "back-butterfly-3", "img": "front-butterfly.webp", "w": 65, "pos": (500, 600),
+     "motion": m_drift((500, 600), dx=100, dy=60, phase_frames=68, scale_pulse=14, cycles=1.25)},
+    # ===== MID-GROUND TREE BASE BUSH (RIGHT only — left moved to front per client) =====
     {"name": "tree-root-bush-R", "img": "back-bush.webp", "w": 360, "pos": (880, 845),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=37)},
-    {"name": "shadow-tree-bush-L", "type": "shadow", "pos": (210, 845), "sw": 280, "sh": 28, "opa": 26},
     {"name": "shadow-tree-bush-R", "type": "shadow", "pos": (880, 850), "sw": 300, "sh": 30, "opa": 26},
     # ===== MID-GROUND TREES =====
     {"name": "back-tree-right",  "img": "back-tree-right.webp", "w": 380, "pos": (880, 820),
@@ -198,6 +202,10 @@ LAYERS_FRONT = [
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=36, rot_offset=-4)},
     {"name": "fr-bush-R3", "img": "back-bush.webp", "w": 270, "pos": (1020, 1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=58, rot_offset=3)},
+    # ===== LION-PAW-COVER BUSH (client req: moved from back to front, covers lion's left paw) =====
+    {"name": "fr-paw-bush-L", "img": "back-bush.webp", "w": 340, "pos": (210, 840),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=11)},
+    {"name": "shadow-paw-bush-L", "type": "shadow", "pos": (210, 845), "sw": 280, "sh": 28, "opa": 26},
 ]
 
 
