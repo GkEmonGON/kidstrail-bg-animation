@@ -177,6 +177,31 @@ LAYERS_BACK = [
          {"t": 50, "s": [350, 530, 0]},   # near-pause mid-canvas
          {"t": 90, "s": [1300, 550, 0]},  # bursts to exit
      ]}},
+    # ===== SMALL FAR-DISTANCE LEAVES (back-layer depth-pair, smaller = farther) =====
+    {"name": "back-leaf-far-1", "img": "falling-leaf.webp", "w": 55,
+     "pos": (440, -60),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [440, -60,  0]},
+         {"t": 30, "s": [420, 280,  0]},
+         {"t": 60, "s": [460, 620,  0]},
+         {"t": 90, "s": [430, 1180, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [-10]},
+         {"t": 45, "s": [25]},
+         {"t": 90, "s": [-15]},
+     ]}},
+    {"name": "back-leaf-far-2", "img": "falling-leaf.webp", "w": 70,
+     "pos": (640, 500),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [640, 500,  0]},
+         {"t": 30, "s": [610, 1180, 0]},  # exits at t=30
+         {"t": 31, "s": [620, -100, 0]},  # 1-frame respawn snap above
+         {"t": 90, "s": [650, 480,  0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [15]},
+         {"t": 45, "s": [-20]},
+         {"t": 90, "s": [10]},
+     ]}},
     # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
     # cloud-traverse y=240 (was 200) — below sun zone
     {"name": "back-cloud-traverse", "img": "sky-cloud.webp", "w": 220, "pos": (0, 240),
@@ -302,6 +327,33 @@ LAYERS_FRONT = [
          {"t": 0,  "s": [15]},
          {"t": 45, "s": [-30]},
          {"t": 90, "s": [20]},
+     ]}},
+    # ===== FOREGROUND BIG LEAVES (closer to viewer = bigger = more realistic depth) =====
+    {"name": "fr-big-leaf-1", "img": "falling-leaf.webp", "w": 200,
+     "pos": (180, -150),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [180, -150, 0]},
+         {"t": 25, "s": [130, 180, 0]},
+         {"t": 55, "s": [230, 600, 0]},
+         {"t": 90, "s": [160, 1200, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [-35]},
+         {"t": 30, "s": [45]},
+         {"t": 60, "s": [-25]},
+         {"t": 90, "s": [30]},
+     ]}},
+    {"name": "fr-big-leaf-2", "img": "falling-leaf.webp", "w": 180,
+     "pos": (850, 380),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [850, 380, 0]},   # starts mid-air at t=0
+         {"t": 45, "s": [890, 1200, 0]},  # exits bottom at t=45
+         {"t": 46, "s": [830, -120, 0]},  # respawn above
+         {"t": 90, "s": [870, 360, 0]},
+     ], "rot_kfs": [
+         {"t": 0,  "s": [20]},
+         {"t": 30, "s": [-40]},
+         {"t": 60, "s": [25]},
+         {"t": 90, "s": [-15]},
      ]}},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
