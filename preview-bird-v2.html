@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KidsTrail Bird v2 — BG Preview (stacked)</title>
+<style>
+  :root { --bg:#eaf6fb; --ink:#1b3a4a; --accent:#42a5f5; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:-apple-system,system-ui,sans-serif; padding:16px; }
+  .wrap { max-width:1400px; margin:0 auto; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  h1 { margin:0; font-size:18px; }
+  .pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .pill { background:#fff; border:1px solid rgba(0,0,0,.08); padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; }
+  .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .stage-wrap { display:flex; justify-content:center; }
+  .stage { background:#fff; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,0.08); overflow:hidden; position:relative; }
+  .stage[data-mode="square"]  { width:min(640px,90vw); aspect-ratio:1/1; }
+  .stage[data-mode="phone-p"] { width:380px; aspect-ratio:9/19.5; }
+  .stage[data-mode="phone-l"] { width:100%; max-width:900px; aspect-ratio:19.5/9; }
+  .stage[data-mode="ipad-p"]  { width:520px; aspect-ratio:3/4; }
+  .stage[data-mode="ipad-l"]  { width:100%; max-width:900px; aspect-ratio:4/3; }
+  .layer { position:absolute; inset:0; }
+  .layer canvas, .layer svg { width:100% !important; height:100% !important; }
+  /* AIRBORNE char: smaller width 50%, higher top:45% (per build_lessons rule 2) */
+  .char { position:absolute; left:50%; top:45%; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
+  .char svg { width:280px; height:240px; filter:drop-shadow(0 8px 12px rgba(0,0,0,.25)); animation:bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+  .ctl { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px; }
+  button.ghost { background:#fff; color:var(--ink); border:1px solid rgba(0,0,0,.1); }
+  .meta { text-align:center; font-size:12px; opacity:.6; margin-top:8px; }
+  .toggle-row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+  label { font-size:13px; }
+  .label { font-size:12px; opacity:.7; margin-right:6px; align-self:center; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>KidsTrail Bird v2 BG · live preview (back + character + front) · sky theme 1080² · 3s loop</h1>
+    </header>
+
+    <div class="pills" id="modes" style="margin-bottom:10px;">
+      <span class="label">Aspect:</span>
+      <button class="pill active" data-mode="square">Native 1:1</button>
+      <button class="pill" data-mode="phone-p">Phone P 9:19.5</button>
+      <button class="pill" data-mode="ipad-p">iPad P 3:4</button>
+      <button class="pill" data-mode="phone-l">Phone L</button>
+      <button class="pill" data-mode="ipad-l">iPad L 4:3</button>
+    </div>
+
+    <div class="toggle-row">
+      <label><input type="checkbox" id="tBack" checked /> back</label>
+      <label><input type="checkbox" id="tChar" checked /> character (placeholder bird)</label>
+      <label><input type="checkbox" id="tFront" checked /> front</label>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage" id="stage" data-mode="square">
+        <div class="layer" id="back"></div>
+        <div class="char" id="char" aria-hidden="true">
+          <!-- Placeholder cartoon bird (until client provides bird character PNG) -->
+          <svg viewBox="0 0 280 240">
+            <!-- body -->
+            <ellipse cx="140" cy="135" rx="78" ry="58" fill="#FFD54F" stroke="#1a1a1a" stroke-width="3.5"/>
+            <!-- belly accent -->
+            <ellipse cx="140" cy="155" rx="48" ry="32" fill="#FFFFFF" stroke="#1a1a1a" stroke-width="2"/>
+            <!-- head -->
+            <circle cx="80" cy="85" r="48" fill="#FFD54F" stroke="#1a1a1a" stroke-width="3.5"/>
+            <!-- eye -->
+            <circle cx="68" cy="78" r="11" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/>
+            <circle cx="68" cy="78" r="5" fill="#1a1a1a"/>
+            <circle cx="70" cy="76" r="2" fill="#fff"/>
+            <!-- beak -->
+            <path d="M30 90 Q14 95 30 102 Q40 96 30 90 Z" fill="#FB8C00" stroke="#1a1a1a" stroke-width="2.5"/>
+            <!-- wing -->
+            <path d="M140 105 Q205 90 235 130 Q210 175 165 165 Q140 150 140 105 Z" fill="#FFA726" stroke="#1a1a1a" stroke-width="3.5"/>
+            <!-- wing feather lines -->
+            <path d="M170 130 Q200 130 220 145" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+            <path d="M165 145 Q200 150 215 160" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+            <!-- tail -->
+            <path d="M210 165 L260 178 L245 200 L215 188 Z" fill="#FB8C00" stroke="#1a1a1a" stroke-width="3"/>
+            <!-- feet -->
+            <line x1="115" y1="190" x2="110" y2="215" stroke="#5a3a1a" stroke-width="4" stroke-linecap="round"/>
+            <line x1="145" y1="192" x2="148" y2="218" stroke="#5a3a1a" stroke-width="4" stroke-linecap="round"/>
+            <path d="M100 215 L120 215" stroke="#5a3a1a" stroke-width="4" stroke-linecap="round"/>
+            <path d="M138 218 L158 218" stroke="#5a3a1a" stroke-width="4" stroke-linecap="round"/>
+            <!-- cheek -->
+            <ellipse cx="95" cy="98" rx="9" ry="6" fill="#FFB0B0" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="layer" id="front"></div>
+      </div>
+    </div>
+
+    <div class="meta" id="meta">loading…</div>
+    <div class="ctl">
+      <button onclick="A.back?.play(); A.front?.play();">Play</button>
+      <button onclick="A.back?.pause(); A.front?.pause();">Pause</button>
+      <button onclick="A.back?.goToAndStop(0,true); A.front?.goToAndStop(0,true);">Reset</button>
+      <button class="ghost" onclick="location.reload()">Reload JSON</button>
+    </div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+  const A = {};
+  function loadInto(id, path) {
+    return lottie.loadAnimation({
+      container: document.getElementById(id),
+      renderer: "canvas",
+      loop: true,
+      autoplay: true,
+      path: path + "?t=" + Date.now(),
+      rendererSettings: { preserveAspectRatio: "xMidYMid slice", clearCanvas: true, dpr: window.devicePixelRatio || 2 },
+    });
+  }
+  A.back  = loadInto("back",  "assets/bird-v2/back.json");
+  A.front = loadInto("front", "assets/bird-v2/front.json");
+  let loaded = 0;
+  const ready = () => {
+    loaded++;
+    if (loaded === 2) {
+      document.getElementById("meta").textContent =
+        `bird-v2 · back+front loaded · ${A.back.totalFrames}f @ ${A.back.frameRate}fps · ${(A.back.totalFrames/A.back.frameRate).toFixed(2)}s loop · ${A.back.animationData.w}×${A.back.animationData.h}`;
+    }
+  };
+  A.back.addEventListener("DOMLoaded", ready);
+  A.front.addEventListener("DOMLoaded", ready);
+
+  document.getElementById("tBack").onchange  = e => document.getElementById("back").style.display  = e.target.checked ? "" : "none";
+  document.getElementById("tFront").onchange = e => document.getElementById("front").style.display = e.target.checked ? "" : "none";
+  document.getElementById("tChar").onchange  = e => document.getElementById("char").style.display  = e.target.checked ? "" : "none";
+
+  document.querySelectorAll("#modes .pill").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll("#modes .pill").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      document.getElementById("stage").dataset.mode = b.dataset.mode;
+    };
+  });
+</script>
+</body>
+</html>

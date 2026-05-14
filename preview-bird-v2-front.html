@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KidsTrail Bird v2 — FRONT only</title>
+<style>
+  body { margin:0; min-height:100vh; background:#222; color:#eee; font-family:-apple-system,system-ui,sans-serif; padding:16px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  h1 { font-size:18px; margin:0; }
+  .stage {
+    width:min(720px,90vw); aspect-ratio:1/1;
+    background:
+      repeating-conic-gradient(#3a3a3a 0% 25%, #2a2a2a 0% 50%) 0/40px 40px;
+    border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,0.5); overflow:hidden;
+  }
+  .stage canvas, .stage svg { width:100% !important; height:100% !important; }
+  .meta { font-size:12px; opacity:.6; }
+  .ctl { display:flex; gap:8px; }
+  button { background:#e07a3c; color:#fff; border:0; padding:8px 16px; border-radius:999px; font-weight:600; cursor:pointer; font-size:13px; }
+  button.ghost { background:#fff; color:#333; border:1px solid rgba(0,0,0,.1); }
+</style>
+</head>
+<body>
+  <h1>bird-v2 · front.json (only — checkered = transparency)</h1>
+  <div class="stage" id="stage"></div>
+  <div class="meta" id="meta">loading…</div>
+  <div class="ctl">
+    <button onclick="A.play()">Play</button>
+    <button onclick="A.pause()">Pause</button>
+    <button onclick="A.goToAndStop(0,true)">Reset</button>
+    <button class="ghost" onclick="location.reload()">Reload</button>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+  const A = lottie.loadAnimation({
+    container: document.getElementById("stage"),
+    renderer: "canvas", loop: true, autoplay: true,
+    path: "assets/bird-v2/front.json?t=" + Date.now(),
+    rendererSettings: { preserveAspectRatio: "xMidYMid slice", clearCanvas: true, dpr: window.devicePixelRatio || 2 },
+  });
+  A.addEventListener("DOMLoaded", () => {
+    document.getElementById("meta").textContent =
+      `front · ${A.totalFrames}f @ ${A.frameRate}fps · ${(A.totalFrames/A.frameRate).toFixed(2)}s loop · ${A.animationData.w}x${A.animationData.h}`;
+  });
+</script>
+</body>
+</html>
