@@ -206,6 +206,21 @@ LAYERS_FRONT = [
     {"name": "fr-paw-bush-L", "img": "back-bush.webp", "w": 490, "pos": (220, 1075),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=11)},
     {"name": "shadow-paw-bush-L", "type": "shadow", "pos": (220, 1080), "sw": 400, "sh": 36, "opa": 28},
+    # ===== CORNER FILLERS (client req: fill gaps at bottom-left + bottom-right) =====
+    # LEFT corner stack: small bush peeking + flower cluster + extra grass
+    {"name": "fr-corner-bush-L", "img": "back-bush.webp", "w": 200, "pos": (10, 1020),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=29, rot_offset=-3)},
+    {"name": "fr-corner-flower-L", "img": "flower-cluster.webp", "w": 110, "pos": (15, 985),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=4.0, phase_frames=7, rot_offset=-5)},
+    {"name": "fr-corner-grass-L", "img": "front-grass-tuft.webp", "w": 140, "pos": (-10, 1075),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=7.0, phase_frames=24, rot_offset=-4)},
+    # RIGHT corner stack
+    {"name": "fr-corner-bush-R", "img": "back-bush.webp", "w": 200, "pos": (1070, 1020),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=51, rot_offset=4)},
+    {"name": "fr-corner-flower-R", "img": "flower-cluster.webp", "w": 110, "pos": (1065, 985),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=4.0, phase_frames=41, rot_offset=5)},
+    {"name": "fr-corner-grass-R", "img": "front-grass-tuft.webp", "w": 140, "pos": (1090, 1075),
+     "anchor": "bottom", "motion": m_wiggle(amp_deg=7.0, phase_frames=8, rot_offset=4)},
 ]
 
 
