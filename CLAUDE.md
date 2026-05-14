@@ -4,6 +4,14 @@ Future Claude: read this first when user asks for parallax / multi-layer Lottie 
 
 **⚠️ MANDATORY before new variant:** Read `~/.claude/projects/-Users-.../memory/build_lessons.md` — contains every bug I hit in animal-v2 (May 2026) with root cause + fix. User explicitly demanded these be saved so they're not repeated. Top issues: breathe-sin-negative exposing white bg, AI checker-pattern fake transparency, content-bbox anchors, tree-root bush placement, opacity-flicker on pop-drift.
 
+**⚠️ CLIENT PREFERENCES (Teamz Lab Animation chat, review 2026-05-13)** — apply to ALL future variants:
+- **Character = main focus**: 80-84% of stage width, top:62-65%, bob-translate only (no rotate)
+- **Depth-pair living decor**: 3 butterflies/birds in BACK + 3 in FRONT (smaller in back for parallax)
+- **Paw-cover foreground bush** (w=480-500) at canvas bottom overlapping char's feet → "lion er pa ta bush e ekto dhaka pore thakbe" pattern
+- **Both bottom corners need a 3-piece stack**: bush + flower + grass each side
+- **Client provides character PNG** (Gemini-generated) — bg-key it before use (66.7% bg in lion test)
+- **Client speaks Banglish** — `ta`=counter, `boosh`=bush, `pa`=leg, `dile valo hoy`=would be good if placed, `tik ase`=fine, `proceed koro`=move ahead. Glossary in build_lessons.md.
+
 ---
 
 ## ⭐ NEW TARGET PATTERN (client reference, 2026-05-12) — USE THIS GOING FORWARD
