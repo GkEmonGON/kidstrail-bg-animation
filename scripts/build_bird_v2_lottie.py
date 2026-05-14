@@ -111,40 +111,39 @@ def m_traverse(y, x_start, x_end):
 # Bird = airborne char. Sky takes upper 75% of canvas, hills 25% at bottom.
 # Char goes top:40% with width 40-55% (smaller than ground subject).
 LAYERS_BACK = [
-    # ===== BACK DEPTH-PAIR small-birds (mixed directions, varied speeds) =====
-    # PNG bird faces LEFT. mirror=True flips → faces RIGHT. So:
-    #   L→R traverse needs mirror=True (bird's beak leads)
-    #   R→L traverse needs mirror=False (default beak direction)
-    # bird-1: L→R FAST, high altitude
+    # ===== BACK depth-pair small-birds (HIGHLY varied speeds + pause delays) =====
+    # PNG bird faces LEFT. mirror=True → faces RIGHT.
+    # bird-1: VERY FAST L→R (zooms across, 2200px range)
     {"name": "back-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 85,
-     "pos": (-150, 380), "mirror": True,
+     "pos": (-400, 380), "mirror": True,
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [-400, 380, 0]},
-         {"t": 90, "s": [1480, 360, 0]},
+         {"t": 0,  "s": [-500, 380, 0]},
+         {"t": 90, "s": [1700, 360, 0]},
      ]}},
-    # bird-2: R→L SLOW (opposite direction, mid altitude)
+    # bird-2: SLOW R→L with DELAYED start (sits offscreen 20f then crawls across)
     {"name": "back-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 70,
-     "pos": (1200, 250),
+     "pos": (1300, 250),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [1280, 240, 0]},
+         {"t": 0,  "s": [1300, 240, 0]},
+         {"t": 20, "s": [1300, 240, 0]},   # paused offscreen-right
          {"t": 90, "s": [-200, 270, 0]},
      ]}},
-    # bird-3: L→R MEDIUM, low altitude
+    # bird-3: MEDIUM L→R, early entry then EXTRA-LONG glide before exit
     {"name": "back-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 60,
-     "pos": (-250, 480), "mirror": True,
+     "pos": (-150, 480), "mirror": True,
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [-250, 460, 0]},
-         {"t": 90, "s": [1250, 500, 0]},
+         {"t": 0,  "s": [-150, 460, 0]},
+         {"t": 30, "s": [120, 470, 0]},     # slow start
+         {"t": 90, "s": [1280, 500, 0]},
      ]}},
-    # ===== CHASE PAIR (2 birds same direction + speed, slight x offset = chasing) =====
-    # bird-chase-A: leader (slightly ahead in x)
+    # ===== CHASE PAIR (synced, A leads, B chases — KEEP SAME SPEED for chase look) =====
+    # Mid-speed chase: 1500px range, slight stagger
     {"name": "back-chase-A", "img": "bird-small-flying-bird.webp", "w": 75,
      "pos": (-200, 320), "mirror": True,
      "motion": {"pos_kfs": [
          {"t": 0,  "s": [-200, 320, 0]},
          {"t": 90, "s": [1300, 320, 0]},
      ]}},
-    # bird-chase-B: chaser (140px behind, slightly lower)
     {"name": "back-chase-B", "img": "bird-small-flying-bird.webp", "w": 65,
      "pos": (-340, 350), "mirror": True,
      "motion": {"pos_kfs": [
@@ -170,8 +169,8 @@ LAYERS_BACK = [
 
 # Reference pattern: MANY small foreground pieces. Spread across canvas bottom.
 LAYERS_FRONT = [
-    # ===== FRONT DEPTH-PAIR small-birds (mixed directions, different speeds from back) =====
-    # bird-1: L→R MEDIUM (with y wobble), large bird closer to viewer
+    # ===== FRONT depth-pair small-birds (HIGHLY varied speeds) =====
+    # bird-1: MEDIUM L→R with y wobble, larger size closer to viewer
     {"name": "front-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 140,
      "pos": (-200, 380), "mirror": True,
      "motion": {"pos_kfs": [
@@ -180,20 +179,21 @@ LAYERS_FRONT = [
          {"t": 60, "s": [700, 410, 0]},
          {"t": 90, "s": [1280, 370, 0]},
      ]}},
-    # bird-2: R→L FAST, mid-bottom altitude (zooms across)
+    # bird-2: VERY FAST R→L (zooms across, 2000px range = 22 px/f)
     {"name": "front-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 120,
-     "pos": (1280, 470),
+     "pos": (1500, 470),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [1380, 480, 0]},
-         {"t": 90, "s": [-280, 440, 0]},
+         {"t": 0,  "s": [1500, 480, 0]},
+         {"t": 90, "s": [-500, 440, 0]},
      ]}},
-    # bird-3: L→R SLOW, high altitude (with gentle y dip)
+    # bird-3: SLOWEST — long ride with pause then accelerates offscreen
     {"name": "front-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 110,
-     "pos": (-300, 250), "mirror": True,
+     "pos": (-200, 250), "mirror": True,
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [-300, 220, 0]},
-         {"t": 50, "s": [600, 280, 0]},
-         {"t": 90, "s": [1080, 250, 0]},
+         {"t": 0,  "s": [-200, 220, 0]},
+         {"t": 40, "s": [200, 280, 0]},     # crawls forward
+         {"t": 70, "s": [400, 250, 0]},     # mid-canvas (lingers)
+         {"t": 90, "s": [1180, 270, 0]},    # speeds up, exits offscreen-right
      ]}},
     # ===== FOREGROUND CLOUD (close, in front of char, slightly slow drift) =====
     {"name": "fr-cloud-foreground", "img": "sky-cloud.webp", "w": 280, "pos": (980, 380),
