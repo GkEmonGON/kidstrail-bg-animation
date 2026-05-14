@@ -23,9 +23,9 @@
   .stage[data-mode="ipad-l"]  { width:100%; max-width:900px; aspect-ratio:4/3; }
   .layer { position:absolute; inset:0; }
   .layer canvas, .layer svg { width:100% !important; height:100% !important; }
-  .char { position:absolute; left:50%; top:58%; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
-  .char svg { width:170px; height:170px; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25)); animation:bob 2.4s ease-in-out infinite; }
-  @keyframes bob { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-10px) rotate(3deg); } }
+  .char { position:absolute; left:50%; top:62%; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
+  .char img { width:70%; max-width:620px; height:auto; filter:drop-shadow(0 10px 16px rgba(0,0,0,.30)); animation:bob 2.4s ease-in-out infinite; display:block; }
+  @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
   .ctl { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px; }
   button.ghost { background:#fff; color:var(--ink); border:1px solid rgba(0,0,0,.1); }
@@ -52,7 +52,7 @@
 
     <div class="toggle-row">
       <label><input type="checkbox" id="tBack" checked /> back</label>
-      <label><input type="checkbox" id="tChar" checked /> character (placeholder monkey)</label>
+      <label><input type="checkbox" id="tChar" checked /> character (lion ref)</label>
       <label><input type="checkbox" id="tFront" checked /> front</label>
     </div>
 
@@ -60,21 +60,7 @@
       <div class="stage" id="stage" data-mode="square">
         <div class="layer" id="back"></div>
         <div class="char" id="char" aria-hidden="true">
-          <!-- placeholder cartoon monkey -->
-          <svg viewBox="0 0 140 140">
-            <ellipse cx="70" cy="80" rx="42" ry="44" fill="#8D5524" stroke="#1a1a1a" stroke-width="3"/>
-            <ellipse cx="70" cy="92" rx="28" ry="26" fill="#F4D6A6" stroke="#1a1a1a" stroke-width="2.5"/>
-            <circle cx="35" cy="58" r="14" fill="#8D5524" stroke="#1a1a1a" stroke-width="3"/>
-            <circle cx="35" cy="58" r="7" fill="#F4D6A6" stroke="#1a1a1a" stroke-width="2"/>
-            <circle cx="105" cy="58" r="14" fill="#8D5524" stroke="#1a1a1a" stroke-width="3"/>
-            <circle cx="105" cy="58" r="7" fill="#F4D6A6" stroke="#1a1a1a" stroke-width="2"/>
-            <ellipse cx="58" cy="80" rx="4.5" ry="6" fill="#1a1a1a"/>
-            <ellipse cx="82" cy="80" rx="4.5" ry="6" fill="#1a1a1a"/>
-            <circle cx="59" cy="78" r="1.5" fill="#fff"/>
-            <circle cx="83" cy="78" r="1.5" fill="#fff"/>
-            <ellipse cx="70" cy="95" rx="5" ry="3" fill="#5a3a1a"/>
-            <path d="M58 105 Q70 115 82 105" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          </svg>
+          <img src="assets/animal-v2/character/lion.png" alt="lion ref" />
         </div>
         <div class="layer" id="front"></div>
       </div>
