@@ -177,13 +177,16 @@ LAYERS_BACK = [
          {"t": 50, "s": [350, 530, 0]},   # near-pause mid-canvas
          {"t": 90, "s": [1300, 550, 0]},  # bursts to exit
      ]}},
-    # ===== SMALL FAR-DISTANCE LEAVES (back-layer depth-pair, smaller = farther) =====
+    # ===== SMALL FAR-DISTANCE LEAVES (back-layer depth-pair, ALWAYS top→bottom) =====
+    # Each leaf starts above canvas (offscreen), falls down. NO respawn tricks
+    # (those caused visible upward zoom during interp).
+    # Variation via STAGGERED pause-before-fall (different leaves start at different frames).
     {"name": "back-leaf-far-1", "img": "falling-leaf.webp", "w": 55,
-     "pos": (440, -60),
+     "pos": (440, -120),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [440, -60,  0]},
-         {"t": 30, "s": [420, 280,  0]},
-         {"t": 60, "s": [460, 620,  0]},
+         {"t": 0,  "s": [440, -120, 0]},
+         {"t": 30, "s": [420, 200,  0]},
+         {"t": 60, "s": [460, 600,  0]},
          {"t": 90, "s": [430, 1180, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [-10]},
@@ -191,15 +194,14 @@ LAYERS_BACK = [
          {"t": 90, "s": [-15]},
      ]}},
     {"name": "back-leaf-far-2", "img": "falling-leaf.webp", "w": 70,
-     "pos": (640, 500),
+     "pos": (640, -180),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [640, 500,  0]},
-         {"t": 30, "s": [610, 1180, 0]},  # exits at t=30
-         {"t": 31, "s": [620, -100, 0]},  # 1-frame respawn snap above
-         {"t": 90, "s": [650, 480,  0]},
+         {"t": 0,  "s": [640, -180, 0]},
+         {"t": 25, "s": [640, -180, 0]},  # paused offscreen 25 frames (delayed entry)
+         {"t": 90, "s": [620, 1180, 0]},  # falls in last 65 frames
      ], "rot_kfs": [
          {"t": 0,  "s": [15]},
-         {"t": 45, "s": [-20]},
+         {"t": 60, "s": [-20]},
          {"t": 90, "s": [10]},
      ]}},
     # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
@@ -256,13 +258,15 @@ LAYERS_FRONT = [
     # ===== PERCH-BRANCH LEFT (mirrored, extends OFFSCREEN-LEFT) =====
     {"name": "fr-perch-branch-L", "img": "bird-perch-branch.webp", "w": 520, "pos": (0, -20),
      "anchor": "top", "mirror": True, "motion": m_wiggle(amp_deg=3.0, phase_frames=42)},
-    # ===== FALLING LEAVES (client req: 2 leaves drift top→bottom in foreground) =====
-    # Each leaf: linear y traverse from above-canvas to below-canvas + slight x sway + rotation
+    # ===== FALLING LEAVES (ALWAYS top→bottom, gravity-realistic) =====
+    # Density via staggered offscreen-pause times (different leaves start falling at different frames).
+    # All leaves visible only when falling down. No respawn tricks (caused visible upward zoom).
+    # leaf-1: medium 110 — falls FULL loop, gentle sway
     {"name": "fr-falling-leaf-1", "img": "falling-leaf.webp", "w": 110,
-     "pos": (340, -80),
+     "pos": (340, -100),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [320, -80,   0]},
-         {"t": 30, "s": [380, 240, 0]},
+         {"t": 0,  "s": [320, -100, 0]},
+         {"t": 30, "s": [380, 250, 0]},
          {"t": 60, "s": [310, 620, 0]},
          {"t": 90, "s": [360, 1180, 0]},
      ], "rot_kfs": [
@@ -271,41 +275,36 @@ LAYERS_FRONT = [
          {"t": 60, "s": [-20]},
          {"t": 90, "s": [30]},
      ]}},
+    # leaf-2: medium 90 — DELAYED START (paused offscreen until t=20, then falls)
     {"name": "fr-falling-leaf-2", "img": "falling-leaf.webp", "w": 90,
-     "pos": (760, -120),
+     "pos": (760, -180),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [780, -120, 0]},
-         {"t": 25, "s": [720, 200,  0]},
-         {"t": 55, "s": [810, 580,  0]},
+         {"t": 0,  "s": [780, -180, 0]},
+         {"t": 20, "s": [780, -180, 0]},  # paused offscreen 20 frames
+         {"t": 50, "s": [720, 280, 0]},
          {"t": 90, "s": [740, 1180, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [10]},
-         {"t": 30, "s": [-30]},
-         {"t": 60, "s": [20]},
-         {"t": 90, "s": [-25]},
+         {"t": 45, "s": [-30]},
+         {"t": 90, "s": [20]},
      ]}},
-    # ===== EXTRA FALLING LEAVES (varied sizes + staggered START y so they never share same frame-y) =====
-    # leaf-3: TINY (60px) — starts mid-canvas (already half-fallen at loop start), invisible snap from y=1180→y=400
-    # Trick: leaf is mid-air at t=0 (y=400), reaches y=1180 by t=50, then RESPAWNS at y=-100 via short jump and falls again
+    # leaf-3: small 60 — VERY DELAYED start (paused 40 frames), faster fall last 50f
     {"name": "fr-falling-leaf-3", "img": "falling-leaf.webp", "w": 60,
-     "pos": (170, 400),
+     "pos": (170, -200),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [170, 400, 0]},
-         {"t": 35, "s": [220, 900, 0]},
-         {"t": 50, "s": [200, 1180, 0]},   # exits below
-         {"t": 51, "s": [180, -120, 0]},   # respawn above (1f snap = imperceptible since offscreen)
-         {"t": 90, "s": [200, 380, 0]},
+         {"t": 0,  "s": [170, -200, 0]},
+         {"t": 40, "s": [170, -200, 0]},  # paused offscreen 40 frames
+         {"t": 90, "s": [220, 1180, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [20]},
-         {"t": 30, "s": [-40]},
-         {"t": 60, "s": [25]},
+         {"t": 50, "s": [-40]},
          {"t": 90, "s": [-15]},
      ]}},
-    # leaf-4: LARGE (130px) — slowest fall, dramatic sway, full path
+    # leaf-4: large 130 — slow + dramatic sway, full path
     {"name": "fr-falling-leaf-4", "img": "falling-leaf.webp", "w": 130,
-     "pos": (920, -90),
+     "pos": (920, -120),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [920, -90, 0]},
+         {"t": 0,  "s": [920, -120, 0]},
          {"t": 25, "s": [870, 180, 0]},
          {"t": 50, "s": [970, 480, 0]},
          {"t": 75, "s": [890, 800, 0]},
@@ -315,26 +314,26 @@ LAYERS_FRONT = [
          {"t": 45, "s": [35]},
          {"t": 90, "s": [-30]},
      ]}},
-    # leaf-5: MEDIUM (95px) — starts already 60% fallen at loop init (different rhythm)
+    # leaf-5: medium 95 — DELAYED start 30 frames, then quick fall
     {"name": "fr-falling-leaf-5", "img": "falling-leaf.webp", "w": 95,
-     "pos": (530, 720),
+     "pos": (530, -180),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [530, 720, 0]},
-         {"t": 25, "s": [490, 1180, 0]},  # exits at t=25
-         {"t": 26, "s": [550, -100, 0]},  # respawn above (1f snap, offscreen)
-         {"t": 90, "s": [510, 700, 0]},   # back to similar y for loop seam
+         {"t": 0,  "s": [530, -180, 0]},
+         {"t": 30, "s": [530, -180, 0]},  # paused offscreen 30 frames
+         {"t": 90, "s": [510, 1180, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [15]},
-         {"t": 45, "s": [-30]},
+         {"t": 60, "s": [-30]},
          {"t": 90, "s": [20]},
      ]}},
     # ===== FOREGROUND BIG LEAVES (closer to viewer = bigger = more realistic depth) =====
+    # big-leaf-1: w=200, full path with dramatic sway + rotation
     {"name": "fr-big-leaf-1", "img": "falling-leaf.webp", "w": 200,
-     "pos": (180, -150),
+     "pos": (180, -250),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [180, -150, 0]},
-         {"t": 25, "s": [130, 180, 0]},
-         {"t": 55, "s": [230, 600, 0]},
+         {"t": 0,  "s": [180, -250, 0]},
+         {"t": 25, "s": [130, 80,   0]},
+         {"t": 55, "s": [230, 500,  0]},
          {"t": 90, "s": [160, 1200, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [-35]},
@@ -342,17 +341,17 @@ LAYERS_FRONT = [
          {"t": 60, "s": [-25]},
          {"t": 90, "s": [30]},
      ]}},
+    # big-leaf-2: w=180, DELAYED start (paused 15f offscreen)
     {"name": "fr-big-leaf-2", "img": "falling-leaf.webp", "w": 180,
-     "pos": (850, 380),
+     "pos": (850, -200),
      "motion": {"pos_kfs": [
-         {"t": 0,  "s": [850, 380, 0]},   # starts mid-air at t=0
-         {"t": 45, "s": [890, 1200, 0]},  # exits bottom at t=45
-         {"t": 46, "s": [830, -120, 0]},  # respawn above
-         {"t": 90, "s": [870, 360, 0]},
+         {"t": 0,  "s": [850, -200, 0]},
+         {"t": 15, "s": [850, -200, 0]},  # short pause
+         {"t": 50, "s": [890, 280, 0]},
+         {"t": 90, "s": [870, 1200, 0]},
      ], "rot_kfs": [
          {"t": 0,  "s": [20]},
-         {"t": 30, "s": [-40]},
-         {"t": 60, "s": [25]},
+         {"t": 45, "s": [-40]},
          {"t": 90, "s": [-15]},
      ]}},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
