@@ -191,16 +191,16 @@ LAYERS_FRONT = [
     # LEFT bush row: 3 bushes overlapping, anchored to canvas bottom (y≈1090 = full height visible)
     {"name": "fr-bush-L1", "img": "back-bush.webp", "w": 300, "pos": (90,  1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=8,  rot_offset=-3)},
-    {"name": "fr-bush-L2", "img": "back-bush.webp", "w": 270, "pos": (260, 1095),
+    {"name": "fr-bush-L2", "img": "back-bush-2.webp", "w": 270, "pos": (260, 1095),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=27, rot_offset=4)},
     {"name": "fr-bush-L3", "img": "back-bush.webp", "w": 230, "pos": (410, 1085),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=44, rot_offset=-2)},
     # RIGHT bush row: 3 bushes overlapping
-    {"name": "fr-bush-R1", "img": "back-bush.webp", "w": 230, "pos": (680, 1085),
+    {"name": "fr-bush-R1", "img": "back-bush-2.webp", "w": 230, "pos": (680, 1085),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.8, phase_frames=15, rot_offset=2)},
     {"name": "fr-bush-R2", "img": "back-bush.webp", "w": 300, "pos": (860, 1095),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=36, rot_offset=-4)},
-    {"name": "fr-bush-R3", "img": "back-bush.webp", "w": 270, "pos": (1020, 1090),
+    {"name": "fr-bush-R3", "img": "back-bush-2.webp", "w": 270, "pos": (1020, 1090),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=2.5, phase_frames=58, rot_offset=3)},
     # ===== LION-PAW-COVER BUSH (client req v2: even bigger) =====
     {"name": "fr-paw-bush-L", "img": "back-bush.webp", "w": 490, "pos": (220, 1075),
@@ -208,7 +208,7 @@ LAYERS_FRONT = [
     {"name": "shadow-paw-bush-L", "type": "shadow", "pos": (220, 1080), "sw": 400, "sh": 36, "opa": 28},
     # ===== CORNER FILLERS (client req: fill gaps at bottom-left + bottom-right) =====
     # LEFT corner stack: small bush peeking + flower cluster + extra grass
-    {"name": "fr-corner-bush-L", "img": "back-bush.webp", "w": 200, "pos": (10, 1020),
+    {"name": "fr-corner-bush-L", "img": "back-bush-2.webp", "w": 200, "pos": (10, 1020),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=3.0, phase_frames=29, rot_offset=-3)},
     {"name": "fr-corner-flower-L", "img": "flower-cluster.webp", "w": 110, "pos": (15, 985),
      "anchor": "bottom", "motion": m_wiggle(amp_deg=4.0, phase_frames=7, rot_offset=-5)},

@@ -111,20 +111,40 @@ def m_traverse(y, x_start, x_end):
 # Bird = airborne char. Sky takes upper 75% of canvas, hills 25% at bottom.
 # Char goes top:40% with width 40-55% (smaller than ground subject).
 LAYERS_BACK = [
-    # ===== BACK DEPTH-PAIR small-birds (client rule: 3 back + 3 front, smaller in back) =====
-    {"name": "back-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 85, "pos": (220, 380),
-     "motion": m_drift((220, 380), dx=140, dy=70, phase_frames=10, scale_pulse=10, cycles=1.5)},
-    {"name": "back-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 70, "pos": (720, 280),
-     "motion": m_drift((720, 280), dx=120, dy=60, phase_frames=38, scale_pulse=12, cycles=1.75)},
-    {"name": "back-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 60, "pos": (540, 480),
-     "motion": m_drift((540, 480), dx=100, dy=50, phase_frames=64, scale_pulse=14, cycles=1.25)},
-    # ===== CLOUDS scattered (mix of two cloud assets for variety) =====
-    {"name": "back-cloud-traverse", "img": "sky-cloud.webp", "w": 220, "pos": (0, 200),
-     "motion": m_traverse(y=200, x_start=-200, x_end=1280)},
-    {"name": "back-cloud-1", "img": "bird-cloud-soft.webp", "w": 260, "pos": (200, 150),
-     "motion": m_bob((200, 150), dx=20, dy=10, phase_frames=15, cycles=0.5)},
-    {"name": "back-cloud-2", "img": "bird-cloud-soft.webp", "w": 200, "pos": (820, 240),
-     "motion": m_bob((820, 240), dx=15, dy=8,  phase_frames=40, cycles=0.5)},
+    # ===== BACK DEPTH-PAIR small-birds (mixed directions, varied speeds) =====
+    # PNG bird faces LEFT. mirror=True flips → faces RIGHT. So:
+    #   L→R traverse needs mirror=True (bird's beak leads)
+    #   R→L traverse needs mirror=False (default beak direction)
+    # bird-1: L→R FAST, high altitude
+    {"name": "back-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 85,
+     "pos": (-150, 380), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-400, 380, 0]},
+         {"t": 90, "s": [1480, 360, 0]},
+     ]}},
+    # bird-2: R→L SLOW (opposite direction, mid altitude)
+    {"name": "back-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 70,
+     "pos": (1200, 250),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [1280, 240, 0]},
+         {"t": 90, "s": [-200, 270, 0]},
+     ]}},
+    # bird-3: L→R MEDIUM, low altitude
+    {"name": "back-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 60,
+     "pos": (-250, 480), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-250, 460, 0]},
+         {"t": 90, "s": [1250, 500, 0]},
+     ]}},
+    # ===== CLOUDS scattered (REPOSITIONED to not overlap sun) =====
+    # cloud-traverse y=240 (was 200) — below sun zone
+    {"name": "back-cloud-traverse", "img": "sky-cloud.webp", "w": 220, "pos": (0, 240),
+     "motion": m_traverse(y=240, x_start=-200, x_end=1280)},
+    # cloud-1 moved RIGHT-of-sun (was at 200,150 — collided with sun)
+    {"name": "back-cloud-1", "img": "bird-cloud-soft.webp", "w": 220, "pos": (500, 130),
+     "motion": m_bob((500, 130), dx=20, dy=10, phase_frames=15, cycles=0.5)},
+    {"name": "back-cloud-2", "img": "bird-cloud-soft.webp", "w": 200, "pos": (880, 280),
+     "motion": m_bob((880, 280), dx=15, dy=8,  phase_frames=40, cycles=0.5)},
     # ===== SUN =====
     {"name": "sky-sun", "img": "sky-sun.webp", "w": 220, "pos": (180, 170),
      "motion": m_breathe(pct=5.0, cycles=2.0)},
@@ -135,21 +155,40 @@ LAYERS_BACK = [
 
 # Reference pattern: MANY small foreground pieces. Spread across canvas bottom.
 LAYERS_FRONT = [
-    # ===== FRONT DEPTH-PAIR small-birds (bigger than back) =====
-    {"name": "front-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 140, "pos": (300, 360),
-     "motion": m_drift((300, 360), dx=180, dy=90, phase_frames=0,  scale_pulse=10, cycles=1.5)},
-    {"name": "front-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 120, "pos": (820, 450),
-     "motion": m_drift((820, 450), dx=160, dy=85, phase_frames=29, scale_pulse=12, cycles=1.75)},
-    {"name": "front-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 110, "pos": (600, 250),
-     "motion": m_drift((600, 250), dx=170, dy=70, phase_frames=55, scale_pulse=14, cycles=1.25)},
-    # ===== FOREGROUND CLOUD (close, in front of char) =====
-    {"name": "fr-cloud-foreground", "img": "sky-cloud.webp", "w": 280, "pos": (980, 350),
-     "motion": m_bob((980, 350), dx=30, dy=12, phase_frames=20, cycles=0.5)},
-    # ===== PERCH-BRANCH (depth-contact, extends OFFSCREEN-RIGHT + content above canvas top) =====
-    # pos_x pushed beyond canvas right so trunk extends into off-canvas right
-    # pos_y negative so content touches/exceeds canvas top edge (no sky-gap)
-    {"name": "fr-perch-branch", "img": "bird-perch-branch.webp", "w": 620, "pos": (1080, -40),
+    # ===== FRONT DEPTH-PAIR small-birds (mixed directions, different speeds from back) =====
+    # bird-1: L→R MEDIUM (with y wobble), large bird closer to viewer
+    {"name": "front-small-bird-1", "img": "bird-small-flying-bird.webp", "w": 140,
+     "pos": (-200, 380), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-200, 400, 0]},
+         {"t": 30, "s": [220, 360, 0]},
+         {"t": 60, "s": [700, 410, 0]},
+         {"t": 90, "s": [1280, 370, 0]},
+     ]}},
+    # bird-2: R→L FAST, mid-bottom altitude (zooms across)
+    {"name": "front-small-bird-2", "img": "bird-small-flying-bird.webp", "w": 120,
+     "pos": (1280, 470),
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [1380, 480, 0]},
+         {"t": 90, "s": [-280, 440, 0]},
+     ]}},
+    # bird-3: L→R SLOW, high altitude (with gentle y dip)
+    {"name": "front-small-bird-3", "img": "bird-small-flying-bird.webp", "w": 110,
+     "pos": (-300, 250), "mirror": True,
+     "motion": {"pos_kfs": [
+         {"t": 0,  "s": [-300, 220, 0]},
+         {"t": 50, "s": [600, 280, 0]},
+         {"t": 90, "s": [1080, 250, 0]},
+     ]}},
+    # ===== FOREGROUND CLOUD (close, in front of char, slightly slow drift) =====
+    {"name": "fr-cloud-foreground", "img": "sky-cloud.webp", "w": 280, "pos": (980, 380),
+     "motion": m_bob((980, 380), dx=30, dy=12, phase_frames=20, cycles=0.5)},
+    # ===== PERCH-BRANCH RIGHT (depth-contact, extends OFFSCREEN-RIGHT) =====
+    {"name": "fr-perch-branch-R", "img": "bird-perch-branch.webp", "w": 620, "pos": (1080, -40),
      "anchor": "top", "motion": m_wiggle(amp_deg=3.0, phase_frames=12)},
+    # ===== PERCH-BRANCH LEFT (mirrored, extends OFFSCREEN-LEFT) =====
+    {"name": "fr-perch-branch-L", "img": "bird-perch-branch.webp", "w": 520, "pos": (0, -20),
+     "anchor": "top", "mirror": True, "motion": m_wiggle(amp_deg=3.0, phase_frames=42)},
     # ===== GROUND-STRIP DECOR (small, only at bottom 25% since sky dominates) =====
     # Grass tufts (front-most, peek from bottom)
     {"name": "fr-grass-L1", "img": "front-grass-tuft.webp", "w": 180, "pos": (60, 1115),
@@ -236,30 +275,31 @@ def shadow_shape_layer(idx_id, name, pos_xy, size_w, size_h, opacity_pct=22):
 
 
 def build_image_layer(idx_id, asset_id, name, w_src, h_src, target_w, pos, motion,
-                      anchor_mode="center", content_bbox=None):
+                      anchor_mode="center", content_bbox=None, mirror=False):
     base_scale = (target_w / w_src) * 100      # fit-to-target percentage
     # Use CONTENT bbox (not image bbox) so anchor lands on visible pixels.
-    # Image-pixel coords. Rotation/scale pivots here.
     cb = content_bbox or (0, 0, w_src, h_src)
-    cx = (cb[0] + cb[2]) / 2          # content horizontal center
+    cx = (cb[0] + cb[2]) / 2
     if anchor_mode == "top":
-        anchor = [cx, cb[1], 0]       # content top edge
+        anchor = [cx, cb[1], 0]
     elif anchor_mode == "bottom":
-        anchor = [cx, cb[3], 0]       # content bottom edge
+        anchor = [cx, cb[3], 0]
     else:
-        anchor = [cx, (cb[1] + cb[3]) / 2, 0]  # content center
+        anchor = [cx, (cb[1] + cb[3]) / 2, 0]
+    # mirror = horizontal flip via negative scale_x
+    sx_sign = -1 if mirror else 1
 
     # scale: 2D pulse percentage from motion -> multiply by base_scale -> 3D Lottie value
     if motion.get("scl_kfs"):
         scl_kfs_3d = [
-            {**kf, "s": [kf["s"][0] * base_scale / 100,
+            {**kf, "s": [kf["s"][0] * base_scale / 100 * sx_sign,
                          kf["s"][1] * base_scale / 100,
                          100]}
             for kf in motion["scl_kfs"]
         ]
         scl_anim = build_animatable(scl_kfs_3d, 3)
     else:
-        scl_anim = {"a": 0, "k": [base_scale, base_scale, 100]}
+        scl_anim = {"a": 0, "k": [base_scale * sx_sign, base_scale, 100]}
 
     ks = {
         "p": build_animatable(motion["pos_kfs"], 3) if motion.get("pos_kfs") else
@@ -305,6 +345,7 @@ def build_lottie(layer_specs, out_name):
             target_w=spec["w"], pos=spec["pos"], motion=spec["motion"],
             anchor_mode=spec.get("anchor", "center"),
             content_bbox=cbbox,
+            mirror=spec.get("mirror", False),
         ))
     doc = {
         "v": "5.7.4", "fr": FPS, "ip": 0, "op": OP, "w": W, "h": H,
