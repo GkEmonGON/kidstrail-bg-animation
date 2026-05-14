@@ -28,6 +28,16 @@ Future Claude: read this first when user asks for parallax / multi-layer Lottie 
 - **Trace motion paths before ship**: animated cloud y-band must NOT overlap sun y-band (cloud "eats" sun otherwise). Birds shouldn't fly through char zone.
 - **Builder feature requirement**: `mirror: True` per-spec flag MUST be in every variant's builder (negate scale_x in build_image_layer).
 
+**⚠️ ANIMATION REALISM & VARIETY (bird-v2 review 2026-05-15)** — apply to ALL future variants:
+- **Gravity decor must be strictly unidirectional.** Falling things (leaves, petals, snow, feathers, fruit) only top→bottom. Rising things (bubbles, sparks) only bottom→top. NEVER show reverse motion even for 1 frame. Client flagged immediately: "some leaf come from ground to top..why u do this?"
+- **NEVER use respawn-snap trick for gravity decor.** Pattern like `{t=25, y=1180}, {t=26, y=-100}` causes visible upward zoom because Lottie LINEAR-interpolates between keyframes — the 1-frame jump is rendered as visible motion through canvas. To get more density, generate MORE instances (free reuse) instead of faking.
+- **Temporal spread via PAUSED-OFFSCREEN-START.** Different instances start above canvas at t=0, but pause offscreen for 0/15/20/25/30/40 frames before falling. Creates staggered entry without reverse motion.
+- **Nature-chaos for organic decor.** Each instance must have UNIQUE motion personality. Vary: rotation (0° to ±720°, mix forward+reverse spins), x-drift (150-300px zigzag with alternating L-R per keyframe), fall duration (50-90f range), start delay (0-40f). Goal: every leaf/petal/feather LOOKS DIFFERENT even though same asset.
+- **Spin magnitude by mass.** Heavy/big decor → ±45-90° pendulum (no full spin). Light/small decor → ±360° to ±720° full rotations. Realistic physics: heavier objects tumble less.
+- **Depth-pair for falling decor too.** Same as butterflies/birds: small instances in back layer (distant), medium in front, BIG instances (180-220px) in foreground for close-viewer depth contact.
+- **Chase-pair pattern** (cheap interaction storytelling): 2-3 same-asset instances same direction + same speed + slight x stagger (100-200px) + slight y stagger (20-40px) + chaser slightly smaller (75-85% of leader). Reads as "running after each other". Sadman client req 2026-05-14.
+- **Hard size cap enforced in builder.** Every `build_*_lottie.py` raises SystemExit if back.json or front.json > 300 KB. Reduces risk of bloated deliveries. Defense: monitor sizes after each rebuild + use asset dedup (asset_by_img map).
+
 ---
 
 ## ⭐ NEW TARGET PATTERN (client reference, 2026-05-12) — USE THIS GOING FORWARD
